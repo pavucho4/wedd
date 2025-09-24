@@ -1,0 +1,104 @@
+import { Clock, Users, Utensils, PartyPopper } from 'lucide-react';
+
+interface WeddingTimelineProps {
+  showRegistry: boolean;
+}
+
+export function WeddingTimeline({ showRegistry }: WeddingTimelineProps) {
+  const timelineEvents = [
+    ...(showRegistry ? [{
+      time: '12:40',
+      title: 'Регистрация',
+      description: 'Церемония бракосочетания',
+      note: 'посещение свободное',
+      icon: Clock,
+    }] : []),
+    {
+      time: '16:30',
+      title: 'Сбор гостей',
+      description: 'Встреча и приветствие гостей',
+      note: 'фуршет',
+      icon: Users,
+    },
+    {
+      time: '17:00',
+      title: 'Банкет',
+      description: 'Праздничный ужин и торжество',
+      note: 'основная программа',
+      icon: Utensils,
+    },
+    {
+      time: '00:00',
+      title: 'Окончание',
+      description: 'Завершение торжества',
+      note: 'до свидания!',
+      icon: PartyPopper,
+    }
+  ];
+
+  return (
+    <section className="py-20 px-6 bg-gradient-to-b from-background to-secondary/20">
+      <div className="max-w-6xl mx-auto">
+        <div className="staggered-fade text-center mb-16">
+          <h2 className="text-4xl md:text-5xl font-serif text-primary mb-4">
+            Расписание
+          </h2>
+          <p className="text-muted-foreground font-light max-w-md mx-auto">
+            нашего особенного дня
+          </p>
+        </div>
+
+        <div className="relative">
+          {/* Timeline line */}
+          <div className="absolute left-1/2 transform -translate-x-1/2 w-px h-full bg-gradient-to-b from-primary/30 to-transparent hidden md:block" />
+          
+          <div className="space-y-12">
+            {timelineEvents.map((event, index) => {
+              const IconComponent = event.icon;
+              const isEven = index % 2 === 0;
+              
+              return (
+                <div
+                  key={index}
+                  className={`staggered-fade relative flex items-center ${
+                    isEven ? 'md:flex-row' : 'md:flex-row-reverse'
+                  } flex-col gap-8`}
+                >
+                  {/* Timeline dot */}
+                  <div className="absolute left-1/2 transform -translate-x-1/2 w-4 h-4 bg-primary rounded-full border-4 border-background shadow-lg hidden md:block z-10" />
+                  
+                  {/* Content card */}
+                  <div className="flex-1 max-w-md">
+                    <div className="timeline-card rounded-2xl p-8 relative">
+                      <div className="flex items-center gap-4 mb-4">
+                        <div className="w-14 h-14 rounded-full bg-gradient-to-br from-primary/20 to-accent/30 flex items-center justify-center">
+                          <IconComponent className="w-7 h-7 text-primary" />
+                        </div>
+                        <div className="text-3xl font-serif text-primary font-light">
+                          {event.time}
+                        </div>
+                      </div>
+                      
+                      <h3 className="text-2xl font-serif text-primary mb-3">
+                        {event.title}
+                      </h3>
+                      <p className="text-muted-foreground font-light mb-2 leading-relaxed">
+                        {event.description}
+                      </p>
+                      <p className="text-sm text-primary/70 font-light italic">
+                        {event.note}
+                      </p>
+                    </div>
+                  </div>
+                  
+                  {/* Spacer for alternating layout */}
+                  <div className="flex-1 hidden md:block" />
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
