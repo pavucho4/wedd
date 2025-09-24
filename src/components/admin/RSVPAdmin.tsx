@@ -16,25 +16,37 @@ export function RSVPAdmin() {
     names: [''],
     tableNumber: ''
   });
+  const [guestStatsState, setGuestStatsState] = useState<{ total: number; attending: number; notAttending: number; noResponse: number }>({ total: 0, attending: 0, notAttending: 0, noResponse: 0 });
 
   useEffect(() => {
     // Автоматически синхронизируем RSVP с гостями при загрузке
-    syncRSVPWithGuests();
-    setRsvpData(getSavedRSVPs());
-    setGuests(getGuests());
+    const initialize = async () => {
+      await syncRSVPWithGuests();
+      const [rsvps, guestsList, stats] = await Promise.all([
+        getSavedRSVPs(),
+        getGuests(),
+        getGuestStats(),
+      ]);
+      setRsvpData(rsvps);
+      setGuests(guestsList);
+      setGuestStatsState(stats);
+    };
+    void initialize();
   }, []);
 
   const attendingCount = rsvpData.filter(item => item.attending).length;
   const notAttendingCount = rsvpData.filter(item => !item.attending).length;
-  const guestStats = getGuestStats();
+  const guestStats = guestStatsState;
 
-  const handleAddGuest = () => {
+  const handleAddGuest = async () => {
     if (newGuest.names[0].trim() && newGuest.tableNumber.trim()) {
-      addGuest({
+      await addGuest({
         names: newGuest.names.filter(name => name.trim()),
         tableNumber: newGuest.tableNumber.trim()
       });
-      setGuests(getGuests());
+      const [updatedGuests, stats] = await Promise.all([getGuests(), getGuestStats()]);
+      setGuests(updatedGuests);
+      setGuestStatsState(stats);
       setNewGuest({ names: [''], tableNumber: '' });
       setIsAddingGuest(false);
     }
@@ -48,22 +60,26 @@ export function RSVPAdmin() {
     });
   };
 
-  const handleSaveGuest = () => {
+  const handleSaveGuest = async () => {
     if (editingGuest && newGuest.names[0].trim() && newGuest.tableNumber.trim()) {
-      updateGuest(editingGuest.id, {
+      await updateGuest(editingGuest.id, {
         names: newGuest.names.filter(name => name.trim()),
         tableNumber: newGuest.tableNumber.trim()
       });
-      setGuests(getGuests());
+      const [updatedGuests, stats] = await Promise.all([getGuests(), getGuestStats()]);
+      setGuests(updatedGuests);
+      setGuestStatsState(stats);
       setEditingGuest(null);
       setNewGuest({ names: [''], tableNumber: '' });
     }
   };
 
-  const handleDeleteGuest = (guestId: string) => {
+  const handleDeleteGuest = async (guestId: string) => {
     if (confirm('Вы уверены, что хотите удалить этого гостя?')) {
-      deleteGuest(guestId);
-      setGuests(getGuests());
+      await deleteGuest(guestId);
+      const [updatedGuests, stats] = await Promise.all([getGuests(), getGuestStats()]);
+      setGuests(updatedGuests);
+      setGuestStatsState(stats);
     }
   };
 
@@ -87,10 +103,16 @@ export function RSVPAdmin() {
     }));
   };
 
-  const handleSyncRSVP = () => {
-    syncRSVPWithGuests();
-    setRsvpData(getSavedRSVPs());
-    setGuests(getGuests());
+  const handleSyncRSVP = async () => {
+    await syncRSVPWithGuests();
+    const [rsvps, guestsList, stats] = await Promise.all([
+      getSavedRSVPs(),
+      getGuests(),
+      getGuestStats(),
+    ]);
+    setRsvpData(rsvps);
+    setGuests(guestsList);
+    setGuestStatsState(stats);
     alert('Синхронизация завершена!');
   };
 

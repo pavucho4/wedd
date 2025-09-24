@@ -10,7 +10,7 @@ const TableSearch = () => {
   const [isSearching, setIsSearching] = useState(false);
   const [error, setError] = useState('');
 
-  const handleSearch = () => {
+  const handleSearch = async () => {
     if (!searchName.trim()) {
       setError('Пожалуйста, введите ваше имя');
       return;
@@ -19,21 +19,24 @@ const TableSearch = () => {
     setIsSearching(true);
     setError('');
     
-    // Имитируем небольшую задержку для лучшего UX
-    setTimeout(() => {
-      const guest = findGuestByName(searchName.trim());
+    try {
+      // Имитируем небольшую задержку для лучшего UX
+      await new Promise(resolve => setTimeout(resolve, 500));
+      const guest = await findGuestByName(searchName.trim());
       setFoundGuest(guest);
-      setIsSearching(false);
-      
       if (!guest) {
         setError('К сожалению, мы не нашли вас в списке гостей. Пожалуйста, проверьте правильность написания имени или обратитесь к организаторам.');
       }
-    }, 500);
+    } catch (e) {
+      setError('Произошла ошибка при поиске. Попробуйте ещё раз.');
+    } finally {
+      setIsSearching(false);
+    }
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
-      handleSearch();
+      void handleSearch();
     }
   };
 

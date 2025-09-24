@@ -2,7 +2,7 @@ import { VercelRequest, VercelResponse } from '@vercel/node';
 import { GoogleSpreadsheet } from 'google-spreadsheet';
 import { JWT } from 'google-auth-library';
 
-// ��������� ��� ������� ������
+
 interface ServiceAccountCredentials {
     client_email: string;
     private_key: string;
