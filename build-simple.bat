@@ -11,3 +11,4 @@ copy public\*.* dist\
 echo Сборка завершена! Папка dist готова для загрузки на Netlify.
 pause
 
+
