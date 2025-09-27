@@ -6,6 +6,7 @@
 2. **API URL** - исправлены базовые URL для API вызовов (убрана проверка development режима)
 3. **Runtime конфигурация** - добавлена конфигурация runtime во все API файлы
 4. **Vercel builds** - runtime теперь указан в конфигурации builds вместо отдельного functions блока
+5. **Команда сборки** - добавлена `buildCommand: "npm run build"` в конфигурацию static-build
 
 ## Шаги для деплоя:
 
