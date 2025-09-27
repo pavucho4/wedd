@@ -2,6 +2,9 @@ import { VercelRequest, VercelResponse } from '@vercel/node';
 import { GoogleSpreadsheet } from 'google-spreadsheet';
 import { JWT } from 'google-auth-library';
 
+export const config = {
+    runtime: 'nodejs',
+};
 
 interface ServiceAccountCredentials {
     client_email: string;

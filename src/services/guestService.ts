@@ -8,9 +8,7 @@ export interface Guest {
 }
 
 // Базовый URL для API
-const API_BASE = process.env.NODE_ENV === 'development'
-    ? 'http://localhost:3000/api'
-    : '/api';
+const API_BASE = '/api';
 
 // Функция для получения всех гостей с сервера
 export async function getGuests(): Promise<Guest[]> {

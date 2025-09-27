@@ -2,6 +2,10 @@ import { VercelRequest, VercelResponse } from '@vercel/node';
 import { GoogleSpreadsheet } from 'google-spreadsheet';
 import { JWT } from 'google-auth-library';
 
+export const config = {
+    runtime: 'nodejs',
+};
+
 export default async function handler(req: VercelRequest, res: VercelResponse) {
     // CORS headers
     res.setHeader('Access-Control-Allow-Credentials', 'true');

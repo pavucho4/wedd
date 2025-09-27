@@ -12,9 +12,7 @@ export interface RSVPData {
 import { Guest, updateGuest, findGuestByName, addGuest } from './guestService';
 
 // Базовый URL для API
-const API_BASE = process.env.NODE_ENV === 'development'
-    ? 'http://localhost:3000/api'
-    : '/api';
+const API_BASE = '/api';
 
 // Функция для отправки данных RSVP на сервер
 export async function sendRSVPData(data: RSVPData): Promise<boolean> {
