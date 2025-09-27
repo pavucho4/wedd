@@ -1,10 +1,5 @@
-import { VercelRequest, VercelResponse } from '@vercel/node';
-
-export const config = {
-  runtime: 'nodejs',
-};
-
-export default async function handler(req: VercelRequest, res: VercelResponse) {
+export default function handler(req, res) {
+  // CORS headers
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS');
@@ -15,7 +10,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return;
   }
 
-  res.status(200).json({ ok: true, message: 'pong' });
+  res.status(200).json({ 
+    ok: true, 
+    message: 'pong',
+    timestamp: new Date().toISOString()
+  });
 }
-
-
