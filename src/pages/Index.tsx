@@ -13,6 +13,18 @@ const Index = () => {
 
   return (
     <main className="min-h-screen bg-background overflow-x-hidden">
+      {/* Простой тест для проверки работы React */}
+      <div style={{ 
+        padding: '20px', 
+        backgroundColor: 'lightgreen', 
+        color: 'black',
+        textAlign: 'center',
+        margin: '10px'
+      }}>
+        <h1>React работает! Гость: {name}</h1>
+        <p>Стол: {tableNumber}</p>
+      </div>
+      
       <WeddingHero guestName={name} />
       <WeddingTimeline showRegistry={showRegistry} />
       <WeddingDressCode />
