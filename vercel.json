@@ -11,12 +11,20 @@
     {
       "src": "api/**/*.js",
       "use": "@vercel/node"
+    },
+    {
+      "src": "api-test.js",
+      "use": "@vercel/node"
     }
   ],
   "routes": [
     {
       "src": "/api/(.*)",
       "dest": "/api/$1"
+    },
+    {
+      "src": "/api-test",
+      "dest": "/api-test.js"
     },
     {
       "src": "/(.*)",

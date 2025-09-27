@@ -1,4 +1,6 @@
-export default function handler(req, res) {
+const { VercelRequest, VercelResponse } = require('@vercel/node');
+
+module.exports = (req, res) => {
   // CORS headers
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -15,4 +17,4 @@ export default function handler(req, res) {
     method: req.method,
     timestamp: new Date().toISOString()
   });
-}
+};
