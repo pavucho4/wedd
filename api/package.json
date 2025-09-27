@@ -1,8 +1,0 @@
-{
-  "name": "api",
-  "version": "1.0.0",
-  "type": "commonjs",
-  "dependencies": {
-    "@vercel/node": "^5.3.24"
-  }
-}
