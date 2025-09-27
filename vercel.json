@@ -6,16 +6,12 @@
       "use": "@vercel/static-build",
       "config": {
         "distDir": "dist",
-        "buildCommand": "npm run vercel-build",
-        "framework": "vite"
+        "buildCommand": "npm run build"
       }
     },
     {
       "src": "api/**/*.ts",
-      "use": "@vercel/node",
-      "config": {
-        "runtime": "nodejs18.x"
-      }
+      "use": "@vercel/node"
     }
   ],
   "routes": [
