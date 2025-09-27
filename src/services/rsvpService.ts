@@ -17,18 +17,23 @@ const API_BASE = '/api';
 // Функция для отправки данных RSVP на сервер
 export async function sendRSVPData(data: RSVPData): Promise<boolean> {
     try {
-        const response = await fetch(`${API_BASE}/rsvp`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data),
-        });
+        // Временно отключаем API вызов
+        // const response = await fetch(`${API_BASE}/rsvp`, {
+        //     method: 'POST',
+        //     headers: {
+        //         'Content-Type': 'application/json',
+        //     },
+        //     body: JSON.stringify(data),
+        // });
 
-        if (response.ok) {
-            return true;
-        }
-        throw new Error('Server error');
+        // if (response.ok) {
+        //     return true;
+        // }
+        // throw new Error('Server error');
+        
+        // Используем только локальное хранилище
+        saveRSVPToLocal(data);
+        return true;
     } catch (error) {
         console.error('Ошибка отправки RSVP на сервер:', error);
         // Резервное сохранение в localStorage

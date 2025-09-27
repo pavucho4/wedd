@@ -13,11 +13,15 @@ const API_BASE = '/api';
 // Функция для получения всех гостей с сервера
 export async function getGuests(): Promise<Guest[]> {
     try {
-        const response = await fetch(`${API_BASE}/guests`);
-        if (response.ok) {
-            return await response.json();
-        }
-        throw new Error(`Server responded with status: ${response.status}`);
+        // Временно отключаем API вызов
+        // const response = await fetch(`${API_BASE}/guests`);
+        // if (response.ok) {
+        //     return await response.json();
+        // }
+        // throw new Error(`Server responded with status: ${response.status}`);
+        
+        // Используем только локальное хранилище
+        return getGuestsFromLocal();
     } catch (error) {
         console.error('Ошибка получения гостей с сервера:', error);
         // Резервный вариант из localStorage
