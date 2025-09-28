@@ -1,3 +1,4 @@
+import { getSupabase } from '@/lib/supabaseClient';
 export interface Guest {
     id: string;
     names: string[];
@@ -18,12 +19,10 @@ function mapSheetRowToGuest(row: any): Guest {
 
 export async function getGuests(): Promise<Guest[]> {
     try {
-        const response = await fetch("/api/guests");
-        if (response.ok) {
-            const guests = await response.json();
-            return guests.map(mapSheetRowToGuest) as Guest[];
-        }
-        return [];
+        const supabase = getSupabase();
+        const { data, error } = await supabase!.from('guests').select('*').order('timestamp', { ascending: false });
+        if (error) return [];
+        return (data ?? []) as Guest[];
     } catch {
         return [];
     }
@@ -35,12 +34,9 @@ export async function addGuest(guest: Omit<Guest, "id">): Promise<boolean> {
         id: Date.now().toString() + Math.random().toString(36).substring(2, 11)
     };
     try {
-        const response = await fetch("/api/guests", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(newGuest),
-        });
-        return response.ok;
+        const supabase = getSupabase();
+        const { error } = await supabase!.from('guests').insert(newGuest);
+        return !error;
     } catch {
         return false;
     }
@@ -48,12 +44,9 @@ export async function addGuest(guest: Omit<Guest, "id">): Promise<boolean> {
 
 export async function updateGuest(guestId: string, updates: Partial<Guest>): Promise<boolean> {
     try {
-        const response = await fetch(`/api/guests?id=${guestId}`, {
-            method: "PATCH",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(updates),
-        });
-        return response.ok;
+        const supabase = getSupabase();
+        const { error } = await supabase!.from('guests').update(updates).eq('id', guestId);
+        return !error;
     } catch {
         return false;
     }
@@ -61,8 +54,9 @@ export async function updateGuest(guestId: string, updates: Partial<Guest>): Pro
 
 export async function deleteGuest(guestId: string): Promise<boolean> {
     try {
-        const response = await fetch(`/api/guests?id=${guestId}`, { method: "DELETE" });
-        return response.ok;
+        const supabase = getSupabase();
+        const { error } = await supabase!.from('guests').delete().eq('id', guestId);
+        return !error;
     } catch {
         return false;
     }

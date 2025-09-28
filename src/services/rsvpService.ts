@@ -7,21 +7,13 @@ export interface RSVPData {
     url: string;
 }
 
+import { getSupabase } from '@/lib/supabaseClient';
+
 export async function sendRSVPData(data: RSVPData): Promise<boolean> {
     try {
-        const response = await fetch("/api/rsvp", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(data),
-        });
-
-        if (response.ok) {
-            return true;
-        } else {
-            return false;
-        }
+        const supabase = getSupabase();
+        const { error } = await supabase!.from('rsvps').insert(data);
+        return !error;
     } catch (error) {
         return false;
     }
@@ -29,13 +21,10 @@ export async function sendRSVPData(data: RSVPData): Promise<boolean> {
 
 export async function getSavedRSVPs(): Promise<RSVPData[]> {
     try {
-        const response = await fetch("/api/rsvp");
-        if (response.ok) {
-            const rsvps = await response.json();
-            return rsvps as RSVPData[];
-        } else {
-            return [];
-        }
+        const supabase = getSupabase();
+        const { data, error } = await supabase!.from('rsvps').select('*').order('timestamp', { ascending: false });
+        if (error) return [];
+        return (data ?? []) as RSVPData[];
     } catch (error) {
         return [];
     }
