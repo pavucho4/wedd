@@ -145,10 +145,10 @@ export function WeddingLocations({ showRegistration = true }: WeddingLocationsPr
     >
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-serif text-primary mb-6 staggered-fade">
+          <h2 className="text-6xl md:text-8xl lg:text-9xl font-serif text-primary mb-6 staggered-fade">
             Где и когда
           </h2>
-          <p className="text-lg text-muted-foreground font-light staggered-fade">
+          <p className="text-lg md:text-xl text-muted-foreground font-light staggered-fade">
             Адреса наших торжественных мероприятий
           </p>
         </div>

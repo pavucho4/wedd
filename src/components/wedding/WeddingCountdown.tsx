@@ -66,7 +66,7 @@ export function WeddingCountdown() {
             <div className="h-px w-16 bg-gradient-to-l from-transparent to-primary/50" />
           </div>
           
-          <h3 className="text-2xl md:text-3xl font-serif text-primary mb-4">
+          <h3 className="text-6xl md:text-8xl lg:text-9xl font-serif text-primary mb-4">
             До торжества осталось
           </h3>
         </div>

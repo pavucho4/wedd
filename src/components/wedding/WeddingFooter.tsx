@@ -37,11 +37,11 @@ export function WeddingFooter() {
             <div className="h-px w-16 bg-gradient-to-l from-transparent to-primary/50" />
           </div>
           
-          <h3 className="text-2xl md:text-3xl font-serif text-primary mb-4">
+          <h3 className="text-6xl md:text-8xl lg:text-9xl font-serif text-primary mb-4">
             Даниил & Алина
           </h3>
           
-          <p className="text-muted-foreground font-light max-w-md mx-auto mb-6">
+          <p className="text-lg md:text-xl text-muted-foreground font-light max-w-md mx-auto mb-6">
             Мы с нетерпением ждем этого особенного дня, когда сможем разделить нашу радость с самыми дорогими людьми
           </p>
         </div>

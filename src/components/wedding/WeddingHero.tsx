@@ -53,7 +53,7 @@ export function WeddingHero({ guestName, gender }: WeddingHeroProps) {
 
         {/* Wedding date */}
         <div className="staggered-fade mb-16">
-          <p className="text-sm md:text-base text-muted-foreground font-light mb-4">
+          <p className="text-lg md:text-xl text-muted-foreground font-light mb-4">
             Приглашаем вас на нашу свадьбу
           </p>
           <h2 className="text-6xl md:text-8xl lg:text-9xl font-serif text-primary mb-4">

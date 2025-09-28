@@ -95,7 +95,7 @@ export function WeddingStory() {
               <div 
                 ref={(el) => (elementRefs.current[`text-${block.id}`] = el)}
                 data-element-id={`text-${block.id}`}
-                className={`flex-1 text-center md:text-left transition-all duration-700 ease-out delay-100 px-4 md:px-0 ${
+                className={`flex-1 text-center transition-all duration-700 ease-out delay-100 px-4 md:px-0 ${
                   visibleElements[`text-${block.id}`] 
                     ? 'opacity-100 translate-x-0' 
                     : 'opacity-0 translate-x-8'
@@ -106,11 +106,13 @@ export function WeddingStory() {
                 </p>
               </div>
               
-              {/* Image */}
+              {/* Image - hidden on mobile for last block, smaller for others */}
               <div 
                 ref={(el) => (elementRefs.current[`image-${block.id}`] = el)}
                 data-element-id={`image-${block.id}`}
                 className={`flex-1 max-w-lg transition-all duration-700 ease-out delay-200 ${
+                  index === 2 ? 'hidden md:block' : 'block'
+                } ${
                   visibleElements[`image-${block.id}`] 
                     ? 'opacity-100 translate-x-0' 
                     : 'opacity-0 translate-x-8'
@@ -120,7 +122,7 @@ export function WeddingStory() {
                   <img
                     src={block.image}
                     alt={`История ${index + 1}`}
-                    className="story-image w-full h-auto max-h-80 md:max-h-96 object-contain transition-transform duration-500 hover:scale-105 rounded-xl"
+                    className="story-image w-full h-auto max-h-20 md:max-h-96 object-contain transition-transform duration-500 hover:scale-105 rounded-xl"
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
                       target.src = '/placeholder.svg';
