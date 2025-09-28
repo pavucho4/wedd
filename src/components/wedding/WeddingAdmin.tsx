@@ -1,7 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Users, Check, X, Download } from 'lucide-react';
+import { Users, Check, X, Download, Plus, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { getGuests } from '@/services/guestService';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { getGuests, addGuest } from '@/services/guestService';
+import { getSavedRSVPs } from '@/services/rsvpService';
+import { useToast } from '@/hooks/use-toast';
 
 interface GuestResponse {
   id: string;
@@ -9,24 +14,110 @@ interface GuestResponse {
   tableNumber: string;
   response: 'yes' | 'no' | null;
   timestamp?: string;
+  source: 'guest' | 'rsvp'; // Откуда пришли данные
 }
 
 export function WeddingAdmin() {
   const [guests, setGuests] = useState<GuestResponse[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [newGuest, setNewGuest] = useState({ names: '', tableNumber: '' });
+  const { toast } = useToast();
 
-  useEffect(() => {
-    (async () => {
-      const loaded = await getGuests();
-      const mapped: GuestResponse[] = loaded.map(g => ({
+  const loadData = async () => {
+    setLoading(true);
+    try {
+      // Загружаем гостей из таблицы guests
+      const loadedGuests = await getGuests();
+      const guestMapped: GuestResponse[] = loadedGuests.map(g => ({
         id: g.id,
         name: g.names.join('; '),
         tableNumber: g.tableNumber,
         response: g.attending === undefined ? null : (g.attending ? 'yes' : 'no'),
-        timestamp: g.timestamp
+        timestamp: g.timestamp,
+        source: 'guest' as const
       }));
-      setGuests(mapped);
-    })();
+
+      // Загружаем RSVP ответы
+      const rsvps = await getSavedRSVPs();
+      const rsvpMapped: GuestResponse[] = rsvps.map(r => ({
+        id: `rsvp-${r.timestamp}-${r.guestName}`,
+        name: r.guestName,
+        tableNumber: r.tableNumber,
+        response: r.attending ? 'yes' : 'no',
+        timestamp: r.timestamp,
+        source: 'rsvp' as const
+      }));
+
+      // Объединяем и убираем дубликаты (приоритет RSVP ответам)
+      const combined = [...guestMapped];
+      rsvpMapped.forEach(rsvp => {
+        const existingIndex = combined.findIndex(g => 
+          g.name.toLowerCase() === rsvp.name.toLowerCase() && 
+          g.tableNumber === rsvp.tableNumber
+        );
+        if (existingIndex >= 0) {
+          // Обновляем существующего гостя с RSVP ответом
+          combined[existingIndex] = rsvp;
+        } else {
+          // Добавляем новый RSVP ответ
+          combined.push(rsvp);
+        }
+      });
+
+      setGuests(combined);
+    } catch (error) {
+      toast({
+        title: "Ошибка загрузки",
+        description: "Не удалось загрузить данные гостей",
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadData();
   }, []);
+
+  const handleAddGuest = async () => {
+    if (!newGuest.names.trim() || !newGuest.tableNumber.trim()) {
+      toast({
+        title: "Ошибка",
+        description: "Заполните все поля",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    try {
+      const success = await addGuest({
+        names: newGuest.names.split(',').map(n => n.trim()).filter(Boolean),
+        tableNumber: newGuest.tableNumber.trim(),
+        attending: undefined,
+        timestamp: new Date().toISOString()
+      });
+
+      if (success) {
+        toast({
+          title: "Успех",
+          description: "Гость добавлен успешно"
+        });
+        setNewGuest({ names: '', tableNumber: '' });
+        setIsAddDialogOpen(false);
+        loadData(); // Перезагружаем данные
+      } else {
+        throw new Error('Failed to add guest');
+      }
+    } catch (error) {
+      toast({
+        title: "Ошибка",
+        description: "Не удалось добавить гостя",
+        variant: "destructive"
+      });
+    }
+  };
 
   const handleExport = () => {
     const csvContent = [
@@ -102,8 +193,58 @@ export function WeddingAdmin() {
           </div>
         </div>
 
-        {/* Export Button */}
-        <div className="flex justify-end mb-6">
+        {/* Action Buttons */}
+        <div className="flex justify-between mb-6">
+          <div className="flex gap-2">
+            <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+              <DialogTrigger asChild>
+                <Button className="flex items-center gap-2">
+                  <Plus className="w-4 h-4" />
+                  Добавить гостя
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Добавить нового гостя</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-4">
+                  <div>
+                    <Label htmlFor="names">Имена гостей</Label>
+                    <Input
+                      id="names"
+                      placeholder="Иван Петров, Мария Иванова"
+                      value={newGuest.names}
+                      onChange={(e) => setNewGuest(prev => ({ ...prev, names: e.target.value }))}
+                    />
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Разделите имена запятыми
+                    </p>
+                  </div>
+                  <div>
+                    <Label htmlFor="tableNumber">Номер столика</Label>
+                    <Input
+                      id="tableNumber"
+                      placeholder="1"
+                      value={newGuest.tableNumber}
+                      onChange={(e) => setNewGuest(prev => ({ ...prev, tableNumber: e.target.value }))}
+                    />
+                  </div>
+                  <div className="flex justify-end gap-2">
+                    <Button variant="outline" onClick={() => setIsAddDialogOpen(false)}>
+                      Отмена
+                    </Button>
+                    <Button onClick={handleAddGuest}>
+                      Добавить
+                    </Button>
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog>
+            <Button variant="outline" onClick={loadData} disabled={loading} className="flex items-center gap-2">
+              <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+              Обновить
+            </Button>
+          </div>
           <Button onClick={handleExport} className="flex items-center gap-2">
             <Download className="w-4 h-4" />
             Экспорт в CSV
@@ -120,6 +261,7 @@ export function WeddingAdmin() {
                   <th className="px-6 py-4 text-left text-sm font-medium text-muted-foreground">Столик</th>
                   <th className="px-6 py-4 text-left text-sm font-medium text-muted-foreground">Статус</th>
                   <th className="px-6 py-4 text-left text-sm font-medium text-muted-foreground">Время ответа</th>
+                  <th className="px-6 py-4 text-left text-sm font-medium text-muted-foreground">Источник</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
@@ -148,6 +290,15 @@ export function WeddingAdmin() {
                     </td>
                     <td className="px-6 py-4 text-sm text-muted-foreground">
                       {guest.timestamp || '-'}
+                    </td>
+                    <td className="px-6 py-4 text-sm text-muted-foreground">
+                      <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs ${
+                        guest.source === 'rsvp' 
+                          ? 'bg-blue-100 text-blue-800' 
+                          : 'bg-gray-100 text-gray-800'
+                      }`}>
+                        {guest.source === 'rsvp' ? 'RSVP' : 'Гость'}
+                      </span>
                     </td>
                   </tr>
                 ))}
