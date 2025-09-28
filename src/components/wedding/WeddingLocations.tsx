@@ -10,13 +10,38 @@ interface LocationCardProps {
 }
 
 function LocationCard({ title, address, time, description, isOptional }: LocationCardProps) {
+  const [isVisible, setIsVisible] = useState(false);
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+        }
+      },
+      { threshold: 0.3 }
+    );
+
+    if (cardRef.current) {
+      observer.observe(cardRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
   const handleDirections = () => {
     const encodedAddress = encodeURIComponent(address);
     window.open(`https://yandex.ru/maps/?text=${encodedAddress}`, '_blank');
   };
 
   return (
-    <div className="card-elegant rounded-xl p-6 group hover:shadow-floating transition-all duration-500 staggered-fade">
+    <div 
+      ref={cardRef}
+      className={`card-elegant rounded-xl p-6 group hover:shadow-floating transition-all duration-1000 ease-out ${
+        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+      }`}
+    >
       <div className="flex items-start gap-4">
         <div className="flex-shrink-0">
           <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center group-hover:bg-primary/20 transition-colors">
@@ -65,7 +90,9 @@ interface WeddingLocationsProps {
 
 export function WeddingLocations({ showRegistration = true }: WeddingLocationsProps) {
   const [isVisible, setIsVisible] = useState(false);
+  const [visibleLocations, setVisibleLocations] = useState<boolean[]>([]);
   const sectionRef = useRef<HTMLElement>(null);
+  const locationRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -77,11 +104,36 @@ export function WeddingLocations({ showRegistration = true }: WeddingLocationsPr
       { threshold: 0.3 }
     );
 
+    const locationObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const index = locationRefs.current.indexOf(entry.target as HTMLDivElement);
+            if (index !== -1) {
+              setVisibleLocations(prev => {
+                const newLocations = [...prev];
+                newLocations[index] = true;
+                return newLocations;
+              });
+            }
+          }
+        });
+      },
+      { threshold: 0.2 }
+    );
+
     if (sectionRef.current) {
       observer.observe(sectionRef.current);
     }
 
-    return () => observer.disconnect();
+    locationRefs.current.forEach((ref) => {
+      if (ref) locationObserver.observe(ref);
+    });
+
+    return () => {
+      observer.disconnect();
+      locationObserver.disconnect();
+    };
   }, []);
 
   return (

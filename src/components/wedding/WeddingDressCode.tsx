@@ -2,7 +2,9 @@ import { useState, useEffect, useRef } from 'react';
 
 export function WeddingDressCode() {
   const [isVisible, setIsVisible] = useState(false);
+  const [visibleColors, setVisibleColors] = useState<boolean[]>([]);
   const sectionRef = useRef<HTMLElement>(null);
+  const colorRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -14,11 +16,36 @@ export function WeddingDressCode() {
       { threshold: 0.3 }
     );
 
+    const colorObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const index = colorRefs.current.indexOf(entry.target as HTMLDivElement);
+            if (index !== -1) {
+              setVisibleColors(prev => {
+                const newColors = [...prev];
+                newColors[index] = true;
+                return newColors;
+              });
+            }
+          }
+        });
+      },
+      { threshold: 0.2 }
+    );
+
     if (sectionRef.current) {
       observer.observe(sectionRef.current);
     }
 
-    return () => observer.disconnect();
+    colorRefs.current.forEach((ref) => {
+      if (ref) colorObserver.observe(ref);
+    });
+
+    return () => {
+      observer.disconnect();
+      colorObserver.disconnect();
+    };
   }, []);
 
   const femaleColors = [
@@ -62,8 +89,13 @@ export function WeddingDressCode() {
               {femaleColors.map((colorItem, index) => (
                 <div
                   key={index}
-                  className="relative group cursor-pointer"
-                  style={{ animationDelay: `${index * 0.1}s` }}
+                  ref={(el) => (colorRefs.current[index] = el)}
+                  className={`relative group cursor-pointer transition-all duration-1000 ease-out ${
+                    visibleColors[index] 
+                      ? 'opacity-100 translate-y-0 scale-100' 
+                      : 'opacity-0 translate-y-8 scale-95'
+                  }`}
+                  style={{ transitionDelay: `${index * 100}ms` }}
                 >
                   <div className="brush-stroke relative overflow-hidden rounded-xl aspect-square">
                     <div
@@ -89,8 +121,13 @@ export function WeddingDressCode() {
               {maleColors.map((colorItem, index) => (
                 <div
                   key={index}
-                  className="relative group cursor-pointer"
-                  style={{ animationDelay: `${index * 0.1}s` }}
+                  ref={(el) => (colorRefs.current[femaleColors.length + index] = el)}
+                  className={`relative group cursor-pointer transition-all duration-1000 ease-out ${
+                    visibleColors[femaleColors.length + index] 
+                      ? 'opacity-100 translate-y-0 scale-100' 
+                      : 'opacity-0 translate-y-8 scale-95'
+                  }`}
+                  style={{ transitionDelay: `${(femaleColors.length + index) * 100}ms` }}
                 >
                   <div className="brush-stroke relative overflow-hidden rounded-xl aspect-square">
                     <div

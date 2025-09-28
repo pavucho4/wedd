@@ -2,7 +2,9 @@ import { useState, useEffect, useRef } from 'react';
 
 export function WeddingStory() {
   const [visibleBlocks, setVisibleBlocks] = useState<boolean[]>([false, false, false]);
+  const [visibleElements, setVisibleElements] = useState<{[key: string]: boolean}>({});
   const blockRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const elementRefs = useRef<{[key: string]: HTMLDivElement | null}>({});
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -23,29 +25,53 @@ export function WeddingStory() {
       { threshold: 0.3 }
     );
 
+    const elementObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const elementId = entry.target.getAttribute('data-element-id');
+            if (elementId) {
+              setVisibleElements(prev => ({
+                ...prev,
+                [elementId]: true
+              }));
+            }
+          }
+        });
+      },
+      { threshold: 0.2 }
+    );
+
     blockRefs.current.forEach((ref) => {
       if (ref) observer.observe(ref);
     });
 
-    return () => observer.disconnect();
+    Object.values(elementRefs.current).forEach((ref) => {
+      if (ref) elementObserver.observe(ref);
+    });
+
+    return () => {
+      observer.disconnect();
+      elementObserver.disconnect();
+    };
   }, []);
 
   const storyBlocks = [
     {
       id: 0,
-      image: '/images/story-1.jpg',
+      image: '/images/story-1.png',
       text: 'История нашей пары началась 18 июля 2021. Мы влюбились друг в друга с первого взгляда',
       imagePosition: 'right' as const
     },
     {
       id: 1,
-      image: '/images/story-2.jpg',
+      image: '/images/story-2.png',
       text: '8 июля 2025 мы решили пожениться',
       imagePosition: 'left' as const
     },
     {
       id: 2,
-      image: '/images/story-3.jpg',
+      image: '/images/story-3.png',
       text: '15 ноября 2025 состоится церемония бракосочетания. И мы будем рады, если вы разделите с нами радость этого дня!',
       imagePosition: 'right' as const
     }
@@ -66,14 +92,30 @@ export function WeddingStory() {
           >
             <div className={`flex flex-col ${block.imagePosition === 'right' ? 'md:flex-row' : 'md:flex-row-reverse'} items-center gap-8 md:gap-16`}>
               {/* Text content */}
-              <div className="flex-1 text-center md:text-left">
+              <div 
+                ref={(el) => (elementRefs.current[`text-${block.id}`] = el)}
+                data-element-id={`text-${block.id}`}
+                className={`flex-1 text-center md:text-left transition-all duration-1000 ease-out delay-200 ${
+                  visibleElements[`text-${block.id}`] 
+                    ? 'opacity-100 translate-x-0' 
+                    : 'opacity-0 translate-x-8'
+                }`}
+              >
                 <p className="text-lg md:text-xl text-muted-foreground font-light leading-relaxed">
                   {block.text}
                 </p>
               </div>
               
               {/* Image */}
-              <div className="flex-1 max-w-md">
+              <div 
+                ref={(el) => (elementRefs.current[`image-${block.id}`] = el)}
+                data-element-id={`image-${block.id}`}
+                className={`flex-1 max-w-md transition-all duration-1000 ease-out delay-400 ${
+                  visibleElements[`image-${block.id}`] 
+                    ? 'opacity-100 translate-x-0' 
+                    : 'opacity-0 translate-x-8'
+                }`}
+              >
                 <div className="relative overflow-hidden rounded-2xl shadow-lg">
                   <img
                     src={block.image}

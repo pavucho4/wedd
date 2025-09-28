@@ -13,7 +13,9 @@ export function WeddingRSVP({ guestName, tableNumber }: WeddingRSVPProps) {
   const [response, setResponse] = useState<'yes' | 'no' | null>(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
+  const [visibleElements, setVisibleElements] = useState<{[key: string]: boolean}>({});
   const sectionRef = useRef<HTMLElement>(null);
+  const elementRefs = useRef<{[key: string]: HTMLDivElement | null}>({});
   const { toast } = useToast();
 
   useEffect(() => {
@@ -26,11 +28,35 @@ export function WeddingRSVP({ guestName, tableNumber }: WeddingRSVPProps) {
       { threshold: 0.3 }
     );
 
+    const elementObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const elementId = entry.target.getAttribute('data-element-id');
+            if (elementId) {
+              setVisibleElements(prev => ({
+                ...prev,
+                [elementId]: true
+              }));
+            }
+          }
+        });
+      },
+      { threshold: 0.2 }
+    );
+
     if (sectionRef.current) {
       observer.observe(sectionRef.current);
     }
 
-    return () => observer.disconnect();
+    Object.values(elementRefs.current).forEach((ref) => {
+      if (ref) elementObserver.observe(ref);
+    });
+
+    return () => {
+      observer.disconnect();
+      elementObserver.disconnect();
+    };
   }, []);
 
   const handleResponse = async (attending: boolean) => {
@@ -103,15 +129,33 @@ export function WeddingRSVP({ guestName, tableNumber }: WeddingRSVPProps) {
     >
       <div className="max-w-2xl mx-auto">
         <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-serif text-primary mb-6 staggered-fade">
+          <h2 
+            ref={(el) => (elementRefs.current['title'] = el)}
+            data-element-id="title"
+            className={`text-4xl md:text-5xl font-serif text-primary mb-6 transition-all duration-1000 ease-out ${
+              visibleElements['title'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+            }`}
+          >
             Подтвердите участие
           </h2>
-          <p className="text-lg text-muted-foreground font-light staggered-fade">
+          <p 
+            ref={(el) => (elementRefs.current['subtitle'] = el)}
+            data-element-id="subtitle"
+            className={`text-lg text-muted-foreground font-light transition-all duration-1000 ease-out delay-200 ${
+              visibleElements['subtitle'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+            }`}
+          >
             Пожалуйста, дайте нам знать, сможете ли вы присутствовать на нашем празднике
           </p>
         </div>
 
-        <div className="card-elegant rounded-2xl p-8 md:p-12 staggered-fade">
+        <div 
+          ref={(el) => (elementRefs.current['card'] = el)}
+          data-element-id="card"
+          className={`card-elegant rounded-2xl p-8 md:p-12 transition-all duration-1000 ease-out delay-400 ${
+            visibleElements['card'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+          }`}
+        >
           <div className="text-center mb-8">
             <p className="text-lg text-muted-foreground font-light mb-2">
               Дорогой {guestName}
