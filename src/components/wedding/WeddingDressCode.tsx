@@ -23,7 +23,7 @@ export function WeddingDressCode() {
             Дресс-код
           </h2>
           <p className="text-muted-foreground font-light max-w-md mx-auto">
-            Наша цветовая палитра в элегантных оттенках
+            Элегантные оттенки для нашего особенного дня
           </p>
         </div>
 

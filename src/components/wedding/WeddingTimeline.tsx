@@ -46,10 +46,10 @@ export function WeddingTimeline({ showRegistration = true }: WeddingTimelineProp
       <div className="max-w-6xl mx-auto">
         <div className="staggered-fade text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-serif text-primary mb-4">
-            Программа дня
+            Расписание
           </h2>
           <p className="text-muted-foreground font-light max-w-md mx-auto">
-            Расписание нашего особенного дня
+            нашего особенного дня
           </p>
         </div>
 

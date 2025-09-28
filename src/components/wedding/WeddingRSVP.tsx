@@ -64,9 +64,9 @@ export function WeddingRSVP({ guestName, tableNumber }: WeddingRSVPProps) {
             </p>
 
             {response === 'yes' && (
-              <div className="bg-accent/50 rounded-lg p-4 text-center">
-                <p className="text-sm text-muted-foreground font-light mb-1">Ваш столик</p>
-                <p className="text-3xl font-serif text-primary">№{tableNumber}</p>
+              <div className="bg-accent/50 rounded-lg p-6 text-center">
+                <p className="text-sm text-muted-foreground font-light mb-2">Ваш столик</p>
+                <p className="text-4xl font-serif text-primary font-bold">№{tableNumber}</p>
               </div>
             )}
           </div>
@@ -92,9 +92,9 @@ export function WeddingRSVP({ guestName, tableNumber }: WeddingRSVPProps) {
             <p className="text-lg text-muted-foreground font-light mb-2">
               Дорогой {guestName}
             </p>
-            <div className="bg-accent/50 rounded-lg p-4 inline-block">
-              <p className="text-sm text-muted-foreground font-light mb-1">Ваш столик</p>
-              <p className="text-2xl font-serif text-primary">№{tableNumber}</p>
+            <div className="bg-accent/50 rounded-lg p-6 inline-block">
+              <p className="text-sm text-muted-foreground font-light mb-2">Ваш столик</p>
+              <p className="text-4xl font-serif text-primary font-bold">№{tableNumber}</p>
             </div>
           </div>
 

@@ -61,8 +61,8 @@ export function WeddingHero({ guestName, gender }: WeddingHeroProps) {
                 <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-gradient-to-br from-primary/20 to-accent/30 flex items-center justify-center">
                   <Heart className="w-6 h-6 text-primary" />
                 </div>
-                <h3 className="font-serif text-lg text-primary mb-2">Первая встреча</h3>
-                <p className="text-sm text-muted-foreground font-light mb-1">Влюбились друг в друга</p>
+                <h3 className="font-serif text-lg text-primary mb-2">Наша история началась</h3>
+                <p className="text-sm text-muted-foreground font-light mb-1">Мы влюбились друг в друга с первого взгляда</p>
                 <p className="text-primary font-medium">18 июля 2021</p>
               </div>
               <div className="card-elegant rounded-xl p-6 text-center">

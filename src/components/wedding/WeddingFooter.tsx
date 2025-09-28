@@ -25,9 +25,15 @@ export function WeddingFooter() {
             <p className="text-sm text-muted-foreground font-light mb-2">
               По всем вопросам обращайтесь:
             </p>
-            <div className="flex items-center justify-center gap-2">
-              <Phone className="w-4 h-4 text-primary" />
-              <span className="text-primary font-medium">+7 (999) 999-99-99</span>
+            <div className="space-y-2">
+              <div className="flex items-center justify-center gap-2">
+                <Phone className="w-4 h-4 text-primary" />
+                <span className="text-primary font-medium">+7 (928) 361-72-17</span>
+              </div>
+              <div className="flex items-center justify-center gap-2">
+                <Phone className="w-4 h-4 text-primary" />
+                <span className="text-primary font-medium">+7 (999) 379-29-17</span>
+              </div>
             </div>
           </div>
         </div>
