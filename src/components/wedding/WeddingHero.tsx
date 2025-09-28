@@ -1,6 +1,4 @@
-import { Heart, Sparkles, Crown, Search } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Link } from 'react-router-dom';
+import { Heart, Sparkles, Crown } from 'lucide-react';
 
 interface WeddingHeroProps {
   guestName: string;
@@ -86,15 +84,9 @@ export function WeddingHero({ guestName, gender }: WeddingHeroProps) {
             <h2 className="text-3xl md:text-4xl font-serif text-primary mb-2">
               15 ноября 2025
             </h2>
-            <p className="text-muted-foreground font-light mb-4">
+            <p className="text-muted-foreground font-light">
               Ставрополь
             </p>
-            <Link to="/search">
-              <Button variant="outline" className="w-full flex items-center gap-2">
-                <Search className="w-4 h-4" />
-                Найти свой столик
-              </Button>
-            </Link>
           </div>
         </div>
       </div>

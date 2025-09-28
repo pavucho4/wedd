@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Users, Check, X, Download, Plus, RefreshCw, Trash2 } from 'lucide-react';
+import { Users, Check, X, Download, Plus, RefreshCw, Trash2, Sync } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
-import { getGuests, addGuest, deleteGuest } from '@/services/guestService';
-import { getSavedRSVPs } from '@/services/rsvpService';
+import { getGuests, addGuest, deleteGuest, updateGuest } from '@/services/guestService';
+import { getSavedRSVPs, deleteRSVP } from '@/services/rsvpService';
 import { useToast } from '@/hooks/use-toast';
 
 interface GuestResponse {
@@ -16,6 +16,7 @@ interface GuestResponse {
   response: 'yes' | 'no' | null;
   timestamp?: string;
   source: 'guest' | 'rsvp'; // Откуда пришли данные
+  rsvpId?: string; // ID RSVP ответа для удаления
 }
 
 export function WeddingAdmin() {
@@ -39,16 +40,17 @@ export function WeddingAdmin() {
         source: 'guest' as const
       }));
 
-      // Загружаем RSVP ответы
-      const rsvps = await getSavedRSVPs();
-      const rsvpMapped: GuestResponse[] = rsvps.map(r => ({
-        id: `rsvp-${r.timestamp}-${r.guestName}`,
-        name: r.guestName,
-        tableNumber: r.tableNumber,
-        response: r.attending ? 'yes' : 'no',
-        timestamp: r.timestamp,
-        source: 'rsvp' as const
-      }));
+        // Загружаем RSVP ответы
+        const rsvps = await getSavedRSVPs();
+        const rsvpMapped: GuestResponse[] = rsvps.map(r => ({
+          id: `rsvp-${r.timestamp}-${r.guestName}`,
+          name: r.guestName,
+          tableNumber: r.tableNumber,
+          response: r.attending ? 'yes' : 'no',
+          timestamp: r.timestamp,
+          source: 'rsvp' as const,
+          rsvpId: r.id // Сохраняем оригинальный ID для удаления
+        }));
 
       // Объединяем и убираем дубликаты (приоритет RSVP ответам)
       const combined = [...guestMapped];
@@ -138,6 +140,71 @@ export function WeddingAdmin() {
         description: "Не удалось удалить гостя",
         variant: "destructive"
       });
+    }
+  };
+
+  const handleDeleteRSVP = async (rsvpId: string, guestName: string) => {
+    try {
+      const success = await deleteRSVP(rsvpId);
+      if (success) {
+        toast({
+          title: "Успех",
+          description: `RSVP ответ "${guestName}" удален`
+        });
+        loadData(); // Перезагружаем данные
+      } else {
+        throw new Error('Failed to delete RSVP');
+      }
+    } catch (error) {
+      toast({
+        title: "Ошибка",
+        description: "Не удалось удалить RSVP ответ",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleSync = async () => {
+    setLoading(true);
+    try {
+      // Загружаем все RSVP ответы
+      const rsvps = await getSavedRSVPs();
+      const guests = await getGuests();
+      
+      let syncedCount = 0;
+      
+      // Синхронизируем RSVP ответы с гостями
+      for (const rsvp of rsvps) {
+        const existingGuest = guests.find(g => 
+          g.names.some(name => 
+            name.toLowerCase() === rsvp.guestName.toLowerCase()
+          )
+        );
+        
+        if (existingGuest) {
+          // Обновляем статус гостя на основе RSVP ответа
+          await updateGuest(existingGuest.id, {
+            attending: rsvp.attending,
+            timestamp: rsvp.timestamp
+          });
+          syncedCount++;
+        }
+      }
+      
+      toast({
+        title: "Синхронизация завершена",
+        description: `Синхронизировано ${syncedCount} записей`
+      });
+      
+      loadData(); // Перезагружаем данные
+    } catch (error) {
+      toast({
+        title: "Ошибка синхронизации",
+        description: "Не удалось выполнить синхронизацию",
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -266,6 +333,10 @@ export function WeddingAdmin() {
               <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
               Обновить
             </Button>
+            <Button variant="outline" onClick={handleSync} disabled={loading} className="flex items-center gap-2">
+              <Sync className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+              Синхронизировать
+            </Button>
           </div>
           <Button onClick={handleExport} className="flex items-center gap-2">
             <Download className="w-4 h-4" />
@@ -324,34 +395,41 @@ export function WeddingAdmin() {
                       </span>
                     </td>
                     <td className="px-6 py-4 text-sm text-muted-foreground">
-                      {guest.source === 'guest' ? (
-                        <AlertDialog>
-                          <AlertDialogTrigger asChild>
-                            <Button variant="outline" size="sm" className="text-red-600 hover:text-red-700 hover:bg-red-50">
-                              <Trash2 className="w-4 h-4" />
-                            </Button>
-                          </AlertDialogTrigger>
-                          <AlertDialogContent>
-                            <AlertDialogHeader>
-                              <AlertDialogTitle>Удалить гостя?</AlertDialogTitle>
-                              <AlertDialogDescription>
-                                Вы уверены, что хотите удалить гостя "{guest.name}"? Это действие нельзя отменить.
-                              </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                              <AlertDialogCancel>Отмена</AlertDialogCancel>
-                              <AlertDialogAction
-                                onClick={() => handleDeleteGuest(guest.id, guest.name)}
-                                className="bg-red-600 hover:bg-red-700"
-                              >
-                                Удалить
-                              </AlertDialogAction>
-                            </AlertDialogFooter>
-                          </AlertDialogContent>
-                        </AlertDialog>
-                      ) : (
-                        <span className="text-xs text-muted-foreground">RSVP</span>
-                      )}
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button variant="outline" size="sm" className="text-red-600 hover:text-red-700 hover:bg-red-50">
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>
+                              {guest.source === 'rsvp' ? 'Удалить RSVP ответ?' : 'Удалить гостя?'}
+                            </AlertDialogTitle>
+                            <AlertDialogDescription>
+                              {guest.source === 'rsvp' 
+                                ? `Вы уверены, что хотите удалить RSVP ответ "${guest.name}"? Это действие нельзя отменить.`
+                                : `Вы уверены, что хотите удалить гостя "${guest.name}"? Это действие нельзя отменить.`
+                              }
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Отмена</AlertDialogCancel>
+                            <AlertDialogAction
+                              onClick={() => {
+                                if (guest.source === 'rsvp' && guest.rsvpId) {
+                                  handleDeleteRSVP(guest.rsvpId, guest.name);
+                                } else {
+                                  handleDeleteGuest(guest.id, guest.name);
+                                }
+                              }}
+                              className="bg-red-600 hover:bg-red-700"
+                            >
+                              Удалить
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
                     </td>
                   </tr>
                 ))}
