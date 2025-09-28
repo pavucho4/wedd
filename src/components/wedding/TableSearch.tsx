@@ -210,9 +210,9 @@ export function TableSearch() {
                       <div className="bg-accent/50 rounded-lg p-6">
                         <div className="flex items-center justify-center mb-2">
                           <MapPin className="w-6 h-6 text-primary mr-2" />
-                          <p className="text-sm text-muted-foreground font-light">Ваш столик</p>
+                          <p className="text-lg md:text-xl text-muted-foreground font-light">Ваш столик</p>
                         </div>
-                        <p className="text-4xl font-serif text-primary font-bold">
+                        <p className="text-6xl md:text-8xl lg:text-9xl font-serif text-primary font-bold">
                           №{searchResult.tableNumber}
                         </p>
                       </div>

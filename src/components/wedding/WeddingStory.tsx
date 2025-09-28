@@ -78,13 +78,13 @@ export function WeddingStory() {
   ];
 
   return (
-    <section className="py-16 md:py-24 bg-background">
+    <section className="py-8 md:py-16 lg:py-24 bg-background">
       <div className="container mx-auto px-4">
         {storyBlocks.map((block, index) => (
           <div
             key={block.id}
             ref={(el) => (blockRefs.current[index] = el)}
-            className={`mb-16 md:mb-24 transition-all duration-700 ease-out ${
+            className={`mb-8 md:mb-16 lg:mb-24 transition-all duration-700 ease-out ${
               visibleBlocks[index] 
                 ? 'opacity-100 translate-y-0' 
                 : 'opacity-0 translate-y-12'

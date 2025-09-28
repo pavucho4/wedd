@@ -157,12 +157,12 @@ export function WeddingRSVP({ guestName, tableNumber }: WeddingRSVPProps) {
           }`}
         >
           <div className="text-center mb-8">
-            <p className="text-lg text-muted-foreground font-light mb-2">
+            <p className="text-lg md:text-xl text-muted-foreground font-light mb-2">
               Дорогой {guestName}
             </p>
             <div className="bg-accent/50 rounded-lg p-6 inline-block">
-              <p className="text-sm text-muted-foreground font-light mb-2">Ваш столик</p>
-              <p className="text-4xl font-serif text-primary font-bold">№{tableNumber}</p>
+              <p className="text-lg md:text-xl text-muted-foreground font-light mb-2">Ваш столик</p>
+              <p className="text-6xl md:text-8xl lg:text-9xl font-serif text-primary font-bold">№{tableNumber}</p>
             </div>
           </div>
 
