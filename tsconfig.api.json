@@ -6,7 +6,7 @@
     "skipLibCheck": true,
     "strict": false,
     "esModuleInterop": true,
-    "module": "commonjs",
+    "module": "esnext",
     "moduleResolution": "node16",
     "resolveJsonModule": true,
     "isolatedModules": true,
@@ -14,5 +14,5 @@
     "types": ["node"]
   },
   "include": ["api/**/*"],
-  "exclude": ["node_modules", "dist", "src"]
+  "exclude": ["node_modules", "dist"]
 }
