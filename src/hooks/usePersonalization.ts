@@ -10,7 +10,7 @@ export interface PersonalizationData {
 
 export function usePersonalization(): PersonalizationData {
   const [data, setData] = useState<PersonalizationData>({
-    name: 'Дорогой гость',
+    name: 'Уважаемый гость',
     tableNumber: '1',
     gender: 'male',
     showRegistration: true,
@@ -19,7 +19,7 @@ export function usePersonalization(): PersonalizationData {
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
-    const name = urlParams.get('name') || 'Дорогой гость';
+    const name = urlParams.get('name') || 'Уважаемый гость';
     const tableNumber = urlParams.get('table') || '1';
     const gender = (urlParams.get('gender') as 'male' | 'female' | 'plural') || 'male';
     const showRegistration = urlParams.get('registration') !== 'false';

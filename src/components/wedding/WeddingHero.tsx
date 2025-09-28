@@ -8,9 +8,9 @@ interface WeddingHeroProps {
 export function WeddingHero({ guestName, gender }: WeddingHeroProps) {
   const getGreeting = () => {
     switch (gender) {
-      case 'female': return 'Дорогая';
-      case 'plural': return 'Дорогие';
-      default: return 'Дорогой';
+      case 'female': return 'Уважаемая';
+      case 'plural': return 'Уважаемые';
+      default: return 'Уважаемый';
     }
   };
   return (
@@ -54,7 +54,7 @@ export function WeddingHero({ guestName, gender }: WeddingHeroProps) {
         {/* Wedding date */}
         <div className="staggered-fade mb-16">
           <p className="text-lg md:text-xl text-muted-foreground font-light mb-4">
-            Приглашаем вас на нашу свадьбу
+            Приглашаем вас на торжество, посвящённое нашему бракосочетанию
           </p>
           <h2 className="text-6xl md:text-8xl lg:text-9xl font-serif text-primary mb-4">
             15 ноября 2025

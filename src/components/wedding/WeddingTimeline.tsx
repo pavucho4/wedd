@@ -91,7 +91,7 @@ export function WeddingTimeline({ showRegistration = true }: WeddingTimelineProp
       time: '00:00',
       title: 'Окончание',
       description: 'Завершение торжества',
-      note: 'до свидания!',
+      note: '',
       icon: PartyPopper,
     }
   ];
