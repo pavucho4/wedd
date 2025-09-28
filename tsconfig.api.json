@@ -7,7 +7,7 @@
     "strict": false,
     "esModuleInterop": true,
     "module": "commonjs",
-    "moduleResolution": "node",
+    "moduleResolution": "node16",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": false,
