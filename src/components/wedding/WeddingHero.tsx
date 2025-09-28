@@ -2,10 +2,17 @@ import { Heart, Sparkles, Crown } from 'lucide-react';
 
 interface WeddingHeroProps {
   guestName: string;
-  greeting: string;
+  gender: 'male' | 'female' | 'plural';
 }
 
-export function WeddingHero({ guestName, greeting }: WeddingHeroProps) {
+export function WeddingHero({ guestName, gender }: WeddingHeroProps) {
+  const getGreeting = () => {
+    switch (gender) {
+      case 'female': return 'Дорогая';
+      case 'plural': return 'Дорогие';
+      default: return 'Дорогой';
+    }
+  };
   return (
     <section className="min-h-screen flex items-center justify-center relative overflow-hidden">
       {/* Background gradient */}
@@ -25,7 +32,7 @@ export function WeddingHero({ guestName, greeting }: WeddingHeroProps) {
         {/* Guest name */}
         <div className="staggered-fade mb-8">
           <p className="text-lg md:text-xl text-muted-foreground font-light tracking-wide">
-            {greeting} {guestName}
+            {getGreeting()} {guestName}
           </p>
         </div>
 
@@ -34,13 +41,11 @@ export function WeddingHero({ guestName, greeting }: WeddingHeroProps) {
           <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif font-light text-primary mb-4">
             Даниил
           </h1>
-          <div className="flex items-center justify-center gap-8 my-8">
-            <div className="h-px w-20 bg-gradient-to-r from-transparent to-primary/60" />
-            <div className="relative">
+            <div className="flex items-center justify-center gap-8 my-8">
+              <div className="h-px w-20 bg-gradient-to-r from-transparent to-primary/60" />
               <span className="text-4xl md:text-5xl font-serif text-primary font-medium">&</span>
+              <div className="h-px w-20 bg-gradient-to-l from-transparent to-primary/60" />
             </div>
-            <div className="h-px w-20 bg-gradient-to-l from-transparent to-primary/60" />
-          </div>
           <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif font-light text-primary">
             Алина
           </h1>
@@ -54,15 +59,17 @@ export function WeddingHero({ guestName, greeting }: WeddingHeroProps) {
                 <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-gradient-to-br from-primary/20 to-accent/30 flex items-center justify-center">
                   <Heart className="w-6 h-6 text-primary" />
                 </div>
-                <h3 className="font-serif text-lg text-primary mb-2 font-bold">Первая встреча</h3>
-                <p className="text-sm text-muted-foreground font-light mb-1">Наша история началась <span className="font-bold text-primary">18 июля 2021</span>. Мы влюбились друг в друга с первого взгляда</p>
+                <h3 className="font-serif text-lg text-primary mb-2">Первая встреча</h3>
+                <p className="text-sm text-muted-foreground font-light mb-1">Влюбились друг в друга</p>
+                <p className="text-primary font-medium">18 июля 2021</p>
               </div>
               <div className="card-elegant rounded-xl p-6 text-center">
                 <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-gradient-to-br from-accent/20 to-primary/30 flex items-center justify-center">
                   <Heart className="w-6 h-6 text-primary" />
                 </div>
-                <h3 className="font-serif text-lg text-primary mb-2 font-bold">Предложение</h3>
-                <p className="text-sm text-muted-foreground font-light mb-1"><span className="font-bold text-primary">8 июля 2025</span> решили пожениться</p>
+                <h3 className="font-serif text-lg text-primary mb-2">Предложение</h3>
+                <p className="text-sm text-muted-foreground font-light mb-1">Решили пожениться</p>
+                <p className="text-primary font-medium">8 июля 2025</p>
               </div>
             </div>
           </div>
@@ -74,7 +81,7 @@ export function WeddingHero({ guestName, greeting }: WeddingHeroProps) {
             <p className="text-sm md:text-base text-muted-foreground font-light mb-2">
               Приглашаем вас на нашу свадьбу
             </p>
-            <h2 className="text-3xl md:text-4xl font-serif text-primary mb-2 font-bold">
+            <h2 className="text-3xl md:text-4xl font-serif text-primary mb-2">
               15 ноября 2025
             </h2>
             <p className="text-muted-foreground font-light">

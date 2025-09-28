@@ -59,10 +59,10 @@ function LocationCard({ title, address, time, description, isOptional }: Locatio
 }
 
 interface WeddingLocationsProps {
-  showRegistry: boolean;
+  showRegistration?: boolean;
 }
 
-export function WeddingLocations({ showRegistry }: WeddingLocationsProps) {
+export function WeddingLocations({ showRegistration = true }: WeddingLocationsProps) {
   return (
     <section className="py-20 px-6 bg-gradient-to-b from-background to-muted/20">
       <div className="max-w-4xl mx-auto">
@@ -75,8 +75,8 @@ export function WeddingLocations({ showRegistry }: WeddingLocationsProps) {
           </p>
         </div>
 
-        <div className={`grid gap-8 ${showRegistry ? 'md:grid-cols-2' : 'md:grid-cols-1 max-w-md mx-auto'}`}>
-          {showRegistry && (
+        <div className={`grid gap-8 ${showRegistration ? 'md:grid-cols-2' : 'max-w-md mx-auto'}`}>
+          {showRegistration && (
             <LocationCard
               title="Регистрация"
               address="просп. Октябрьской Революции, 1, Ставрополь"

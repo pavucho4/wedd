@@ -35,3 +35,5 @@ export default async function (request: VercelRequest, response: VercelResponse)
     response.status(405).json({ message: "Method Not Allowed" });
   }
 }
+
+

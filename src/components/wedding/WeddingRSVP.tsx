@@ -2,15 +2,14 @@ import { useState } from 'react';
 import { Heart, Check, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
-import { sendRSVPData, RSVPData } from '@/services/rsvpService';
+import { sendRSVPData } from '@/services/rsvpService';
 
 interface WeddingRSVPProps {
   guestName: string;
   tableNumber: string;
-  greeting: string;
 }
 
-export function WeddingRSVP({ guestName, tableNumber, greeting }: WeddingRSVPProps) {
+export function WeddingRSVP({ guestName, tableNumber }: WeddingRSVPProps) {
   const [response, setResponse] = useState<'yes' | 'no' | null>(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const { toast } = useToast();
@@ -18,51 +17,24 @@ export function WeddingRSVP({ guestName, tableNumber, greeting }: WeddingRSVPPro
   const handleResponse = async (attending: boolean) => {
     const newResponse = attending ? 'yes' : 'no';
     setResponse(newResponse);
-    
-    // Подготавливаем данные для отправки
-    const rsvpData: RSVPData = {
-      guestName,
-      tableNumber,
-      attending,
-      timestamp: new Date().toLocaleString('ru-RU'),
+
+    const payload = {
+      guestName: guestName,
+      tableNumber: tableNumber,
+      attending: attending,
+      timestamp: new Date().toISOString(),
       userAgent: navigator.userAgent,
-      url: window.location.href
+      url: typeof window !== 'undefined' ? window.location.href : ''
     };
 
-    try {
-      // Пытаемся отправить данные на сервер
-      const success = await sendRSVPData(rsvpData);
-      
-
-      
-      setIsSubmitted(true);
-      
-      if (success) {
-        toast({
-          title: attending ? "Спасибо за подтверждение!" : "Спасибо за ответ",
-          description: attending 
-            ? "Мы с нетерпением ждем встречи с вами на нашем празднике!"
-            : "Нам жаль, что вы не сможете присоединиться к нам.",
-        });
-      } else {
-        toast({
-          title: "Ответ сохранен!",
-          description: attending 
-            ? "Ваш ответ сохранен локально. Мы с нетерпением ждем встречи с вами!"
-            : "Ваш ответ сохранен локально. Спасибо за уведомление.",
-        });
-      }
-    } catch (error) {
-
-      setIsSubmitted(true);
-      
-      toast({
-        title: "Ответ сохранен!",
-        description: attending 
-          ? "Ваш ответ сохранен локально. Мы с нетерпением ждем встречи с вами!"
-          : "Ваш ответ сохранен локально. Спасибо за уведомление.",
-      });
-    }
+    const ok = await sendRSVPData(payload);
+    setIsSubmitted(true);
+    toast({
+      title: attending ? "Спасибо за подтверждение!" : "Спасибо за ответ",
+      description: attending 
+        ? "Мы с нетерпением ждем встречи с вами на нашем празднике!"
+        : (ok ? "Нам жаль, что вы не сможете присоединиться к нам." : "Произошла ошибка при отправке ответа. Попробуйте позже."),
+    });
   };
 
   if (isSubmitted) {
@@ -92,9 +64,9 @@ export function WeddingRSVP({ guestName, tableNumber, greeting }: WeddingRSVPPro
             </p>
 
             {response === 'yes' && (
-              <div className="bg-accent/50 rounded-lg p-6 text-center">
-                <p className="text-base text-muted-foreground font-light mb-2">Ваш столик</p>
-                <p className="text-4xl font-serif text-primary font-bold">№{tableNumber}</p>
+              <div className="bg-accent/50 rounded-lg p-4 text-center">
+                <p className="text-sm text-muted-foreground font-light mb-1">Ваш столик</p>
+                <p className="text-3xl font-serif text-primary">№{tableNumber}</p>
               </div>
             )}
           </div>
@@ -118,11 +90,11 @@ export function WeddingRSVP({ guestName, tableNumber, greeting }: WeddingRSVPPro
         <div className="card-elegant rounded-2xl p-8 md:p-12 staggered-fade">
           <div className="text-center mb-8">
             <p className="text-lg text-muted-foreground font-light mb-2">
-              {greeting} {guestName}
+              Дорогой {guestName}
             </p>
-            <div className="bg-accent/50 rounded-lg p-6 inline-block">
-              <p className="text-base text-muted-foreground font-light mb-2">Ваш столик</p>
-              <p className="text-4xl font-serif text-primary font-bold">№{tableNumber}</p>
+            <div className="bg-accent/50 rounded-lg p-4 inline-block">
+              <p className="text-sm text-muted-foreground font-light mb-1">Ваш столик</p>
+              <p className="text-2xl font-serif text-primary">№{tableNumber}</p>
             </div>
           </div>
 

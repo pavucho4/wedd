@@ -1,18 +1,19 @@
 import { Clock, Users, Utensils, PartyPopper } from 'lucide-react';
 
 interface WeddingTimelineProps {
-  showRegistry: boolean;
+  showRegistration?: boolean;
 }
 
-export function WeddingTimeline({ showRegistry }: WeddingTimelineProps) {
-  const timelineEvents = [
-    ...(showRegistry ? [{
+export function WeddingTimeline({ showRegistration = true }: WeddingTimelineProps) {
+  const allEvents = [
+    {
       time: '12:40',
       title: 'Регистрация',
       description: 'Церемония бракосочетания',
       note: 'посещение свободное',
       icon: Clock,
-    }] : []),
+      isRegistration: true,
+    },
     {
       time: '16:30',
       title: 'Сбор гостей',
@@ -36,15 +37,19 @@ export function WeddingTimeline({ showRegistry }: WeddingTimelineProps) {
     }
   ];
 
+  const timelineEvents = showRegistration 
+    ? allEvents 
+    : allEvents.filter(event => !event.isRegistration);
+
   return (
     <section className="py-20 px-6 bg-gradient-to-b from-background to-secondary/20">
       <div className="max-w-6xl mx-auto">
         <div className="staggered-fade text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-serif text-primary mb-4">
-            Расписание
+            Программа дня
           </h2>
           <p className="text-muted-foreground font-light max-w-md mx-auto">
-            нашего особенного дня
+            Расписание нашего особенного дня
           </p>
         </div>
 

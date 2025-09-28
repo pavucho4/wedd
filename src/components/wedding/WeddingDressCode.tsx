@@ -22,6 +22,9 @@ export function WeddingDressCode() {
           <h2 className="text-4xl md:text-5xl font-serif text-primary mb-4">
             Дресс-код
           </h2>
+          <p className="text-muted-foreground font-light max-w-md mx-auto">
+            Наша цветовая палитра в элегантных оттенках
+          </p>
         </div>
 
         <div className="staggered-fade mb-16">
