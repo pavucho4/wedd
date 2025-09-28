@@ -138,7 +138,7 @@ export function WeddingRSVP({ guestName, tableNumber }: WeddingRSVPProps) {
   return (
     <section 
       ref={sectionRef}
-      className={`py-20 px-6 bg-gradient-to-b from-muted/20 to-background transition-all duration-350 ease-out ${
+      className={`py-20 px-6 bg-gradient-to-b from-muted/20 to-background transition-all duration-500 ease-out ${
         isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
       }`}
     >
@@ -147,7 +147,7 @@ export function WeddingRSVP({ guestName, tableNumber }: WeddingRSVPProps) {
           <h2 
             ref={(el) => (elementRefs.current['title'] = el)}
             data-element-id="title"
-            className={`text-6xl md:text-8xl lg:text-9xl font-serif text-primary mb-6 transition-all duration-350 ease-out ${
+            className={`text-6xl md:text-8xl lg:text-9xl font-serif text-primary mb-6 transition-all duration-500 ease-out ${
               visibleElements['title'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
             }`}
           >
@@ -156,7 +156,7 @@ export function WeddingRSVP({ guestName, tableNumber }: WeddingRSVPProps) {
           <p 
             ref={(el) => (elementRefs.current['subtitle'] = el)}
             data-element-id="subtitle"
-            className={`text-lg md:text-xl text-muted-foreground font-light transition-all duration-350 ease-out delay-100 ${
+            className={`text-lg md:text-xl text-muted-foreground font-light transition-all duration-500 ease-out delay-100 ${
               visibleElements['subtitle'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
             }`}
           >
@@ -167,7 +167,7 @@ export function WeddingRSVP({ guestName, tableNumber }: WeddingRSVPProps) {
         <div 
           ref={(el) => (elementRefs.current['card'] = el)}
           data-element-id="card"
-          className={`card-elegant rounded-2xl p-8 md:p-12 transition-all duration-350 ease-out delay-200 ${
+          className={`card-elegant rounded-2xl p-8 md:p-12 transition-all duration-500 ease-out delay-200 ${
             visibleElements['card'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
           }`}
         >

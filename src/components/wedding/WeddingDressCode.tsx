@@ -78,7 +78,7 @@ export function WeddingDressCode() {
   return (
     <section 
       ref={sectionRef}
-      className={`py-20 px-6 bg-gradient-to-b from-secondary/20 to-background transition-all duration-350 ease-out ${
+      className={`py-20 px-6 bg-gradient-to-b from-secondary/20 to-background transition-all duration-500 ease-out ${
         isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
       }`}
     >
@@ -101,12 +101,12 @@ export function WeddingDressCode() {
                 <div
                   key={index}
                   ref={(el) => (colorRefs.current[index] = el)}
-                  className={`relative group cursor-pointer transition-all duration-350 ease-out ${
+                  className={`relative group cursor-pointer transition-all duration-500 ease-out ${
                     visibleColors[index] 
                       ? 'opacity-100 translate-y-0 scale-100' 
                       : 'opacity-0 translate-y-8 scale-95'
                   }`}
-                  style={{ transitionDelay: `${index * 40}ms` }}
+                  style={{ transitionDelay: `${index * 60}ms` }}
                 >
                   <div className="brush-stroke relative overflow-hidden rounded-xl aspect-square">
                     <div
@@ -133,12 +133,12 @@ export function WeddingDressCode() {
                 <div
                   key={index}
                   ref={(el) => (colorRefs.current[femaleColors.length + index] = el)}
-                  className={`relative group cursor-pointer transition-all duration-350 ease-out ${
+                  className={`relative group cursor-pointer transition-all duration-500 ease-out ${
                     visibleColors[femaleColors.length + index] 
                       ? 'opacity-100 translate-y-0 scale-100' 
                       : 'opacity-0 translate-y-8 scale-95'
                   }`}
-                  style={{ transitionDelay: `${(femaleColors.length + index) * 40}ms` }}
+                  style={{ transitionDelay: `${(femaleColors.length + index) * 60}ms` }}
                 >
                   <div className="brush-stroke relative overflow-hidden rounded-xl aspect-square">
                     <div

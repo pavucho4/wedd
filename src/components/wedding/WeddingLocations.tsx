@@ -48,7 +48,7 @@ function LocationCard({ title, address, time, description, isOptional }: Locatio
   return (
     <div 
       ref={cardRef}
-      className={`card-elegant rounded-xl p-6 group hover:shadow-floating transition-all duration-350 ease-out ${
+      className={`card-elegant rounded-xl p-6 group hover:shadow-floating transition-all duration-500 ease-out ${
         isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
       }`}
     >
@@ -149,7 +149,7 @@ export function WeddingLocations({ showRegistration = true }: WeddingLocationsPr
   return (
     <section 
       ref={sectionRef}
-      className={`py-20 px-6 bg-gradient-to-b from-background to-muted/20 transition-all duration-350 ease-out ${
+      className={`py-20 px-6 bg-gradient-to-b from-background to-muted/20 transition-all duration-500 ease-out ${
         isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
       }`}
     >

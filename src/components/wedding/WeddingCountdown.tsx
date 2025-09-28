@@ -64,7 +64,7 @@ export function WeddingCountdown() {
   return (
     <section 
       ref={sectionRef}
-      className={`py-16 px-6 bg-gradient-to-t from-secondary/20 to-background transition-all duration-350 ease-out ${
+      className={`py-16 px-6 bg-gradient-to-t from-secondary/20 to-background transition-all duration-500 ease-out ${
         isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
       }`}
     >

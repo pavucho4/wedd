@@ -103,7 +103,7 @@ export function WeddingTimeline({ showRegistration = true }: WeddingTimelineProp
   return (
     <section 
       ref={sectionRef}
-      className={`py-20 px-6 bg-gradient-to-b from-background to-secondary/20 transition-all duration-350 ease-out ${
+      className={`py-20 px-6 bg-gradient-to-b from-background to-secondary/20 transition-all duration-500 ease-out ${
         isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
       }`}
     >
@@ -132,12 +132,12 @@ export function WeddingTimeline({ showRegistration = true }: WeddingTimelineProp
                   ref={(el) => (eventRefs.current[index] = el)}
                   className={`relative flex items-center ${
                     isEven ? 'md:flex-row' : 'md:flex-row-reverse'
-                  } flex-col gap-8 transition-all duration-350 ease-out ${
+                  } flex-col gap-8 transition-all duration-500 ease-out ${
                     visibleEvents[index] 
                       ? 'opacity-100 translate-y-0' 
                       : 'opacity-0 translate-y-8'
                   }`}
-                  style={{ transitionDelay: `${index * 75}ms` }}
+                  style={{ transitionDelay: `${index * 100}ms` }}
                 >
                   {/* Timeline dot */}
                   <div className="absolute left-1/2 transform -translate-x-1/2 w-4 h-4 bg-primary rounded-full border-4 border-background shadow-lg hidden md:block z-10" />
