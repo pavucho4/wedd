@@ -9,11 +9,7 @@
       }
     },
     {
-      "src": "api/**/*.js",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "api-test.js",
+      "src": "api/**/*.ts",
       "use": "@vercel/node"
     }
   ],
@@ -21,10 +17,6 @@
     {
       "src": "/api/(.*)",
       "dest": "/api/$1"
-    },
-    {
-      "src": "/api-test",
-      "dest": "/api-test.js"
     },
     {
       "src": "/(.*)",

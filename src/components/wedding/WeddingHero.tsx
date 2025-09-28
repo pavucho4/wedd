@@ -2,9 +2,10 @@ import { Heart, Sparkles, Crown } from 'lucide-react';
 
 interface WeddingHeroProps {
   guestName: string;
+  greeting: string;
 }
 
-export function WeddingHero({ guestName }: WeddingHeroProps) {
+export function WeddingHero({ guestName, greeting }: WeddingHeroProps) {
   return (
     <section className="min-h-screen flex items-center justify-center relative overflow-hidden">
       {/* Background gradient */}
@@ -24,7 +25,7 @@ export function WeddingHero({ guestName }: WeddingHeroProps) {
         {/* Guest name */}
         <div className="staggered-fade mb-8">
           <p className="text-lg md:text-xl text-muted-foreground font-light tracking-wide">
-            Дорогой(ая) {guestName}
+            {greeting} {guestName}
           </p>
         </div>
 

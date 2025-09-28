@@ -2,14 +2,15 @@ import { useState } from 'react';
 import { Heart, Check, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
-import { sendRSVPData, saveRSVPToLocal, RSVPData } from '@/services/rsvpService';
+import { sendRSVPData, RSVPData } from '@/services/rsvpService';
 
 interface WeddingRSVPProps {
   guestName: string;
   tableNumber: string;
+  greeting: string;
 }
 
-export function WeddingRSVP({ guestName, tableNumber }: WeddingRSVPProps) {
+export function WeddingRSVP({ guestName, tableNumber, greeting }: WeddingRSVPProps) {
   const [response, setResponse] = useState<'yes' | 'no' | null>(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const { toast } = useToast();
@@ -32,8 +33,7 @@ export function WeddingRSVP({ guestName, tableNumber }: WeddingRSVPProps) {
       // Пытаемся отправить данные на сервер
       const success = await sendRSVPData(rsvpData);
       
-      // В любом случае сохраняем локально как резерв
-      saveRSVPToLocal(rsvpData);
+
       
       setIsSubmitted(true);
       
@@ -53,8 +53,7 @@ export function WeddingRSVP({ guestName, tableNumber }: WeddingRSVPProps) {
         });
       }
     } catch (error) {
-      // В случае ошибки все равно сохраняем локально
-      saveRSVPToLocal(rsvpData);
+
       setIsSubmitted(true);
       
       toast({
@@ -119,7 +118,7 @@ export function WeddingRSVP({ guestName, tableNumber }: WeddingRSVPProps) {
         <div className="card-elegant rounded-2xl p-8 md:p-12 staggered-fade">
           <div className="text-center mb-8">
             <p className="text-lg text-muted-foreground font-light mb-2">
-              Дорогой(ая) {guestName}
+              {greeting} {guestName}
             </p>
             <div className="bg-accent/50 rounded-lg p-6 inline-block">
               <p className="text-base text-muted-foreground font-light mb-2">Ваш столик</p>
