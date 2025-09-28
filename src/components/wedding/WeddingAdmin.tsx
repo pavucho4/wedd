@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
-import { Users, Check, X, Download, Plus, RefreshCw } from 'lucide-react';
+import { Users, Check, X, Download, Plus, RefreshCw, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { getGuests, addGuest } from '@/services/guestService';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
+import { getGuests, addGuest, deleteGuest } from '@/services/guestService';
 import { getSavedRSVPs } from '@/services/rsvpService';
 import { useToast } from '@/hooks/use-toast';
 
@@ -114,6 +115,27 @@ export function WeddingAdmin() {
       toast({
         title: "Ошибка",
         description: "Не удалось добавить гостя",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleDeleteGuest = async (guestId: string, guestName: string) => {
+    try {
+      const success = await deleteGuest(guestId);
+      if (success) {
+        toast({
+          title: "Успех",
+          description: `Гость "${guestName}" удален`
+        });
+        loadData(); // Перезагружаем данные
+      } else {
+        throw new Error('Failed to delete guest');
+      }
+    } catch (error) {
+      toast({
+        title: "Ошибка",
+        description: "Не удалось удалить гостя",
         variant: "destructive"
       });
     }
@@ -262,6 +284,7 @@ export function WeddingAdmin() {
                   <th className="px-6 py-4 text-left text-sm font-medium text-muted-foreground">Статус</th>
                   <th className="px-6 py-4 text-left text-sm font-medium text-muted-foreground">Время ответа</th>
                   <th className="px-6 py-4 text-left text-sm font-medium text-muted-foreground">Источник</th>
+                  <th className="px-6 py-4 text-left text-sm font-medium text-muted-foreground">Действия</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
@@ -299,6 +322,36 @@ export function WeddingAdmin() {
                       }`}>
                         {guest.source === 'rsvp' ? 'RSVP' : 'Гость'}
                       </span>
+                    </td>
+                    <td className="px-6 py-4 text-sm text-muted-foreground">
+                      {guest.source === 'guest' ? (
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <Button variant="outline" size="sm" className="text-red-600 hover:text-red-700 hover:bg-red-50">
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>Удалить гостя?</AlertDialogTitle>
+                              <AlertDialogDescription>
+                                Вы уверены, что хотите удалить гостя "{guest.name}"? Это действие нельзя отменить.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Отмена</AlertDialogCancel>
+                              <AlertDialogAction
+                                onClick={() => handleDeleteGuest(guest.id, guest.name)}
+                                className="bg-red-600 hover:bg-red-700"
+                              >
+                                Удалить
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
+                      ) : (
+                        <span className="text-xs text-muted-foreground">RSVP</span>
+                      )}
                     </td>
                   </tr>
                 ))}

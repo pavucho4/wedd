@@ -216,17 +216,6 @@ export function TableSearch() {
                           №{searchResult.tableNumber}
                         </p>
                       </div>
-
-                      <div className="mt-4">
-                        <p className="text-sm text-muted-foreground mb-1">Источник:</p>
-                        <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
-                          searchResult.source === 'rsvp' 
-                            ? 'bg-blue-100 text-blue-800' 
-                            : 'bg-gray-100 text-gray-800'
-                        }`}>
-                          {searchResult.source === 'rsvp' ? 'RSVP ответ' : 'Список гостей'}
-                        </span>
-                      </div>
                     </div>
                 </div>
               </CardContent>
