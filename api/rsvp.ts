@@ -1,12 +1,12 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { addRowToSheet, getRowsFromSheet } from "../src/services/googleSheetService.js";
+import { getStorage } from "../src/server/storage.js";
 
 export default async function (request: VercelRequest, response: VercelResponse) {
   if (request.method === "POST") {
     try {
       const { guestName, tableNumber, attending, timestamp, userAgent, url } =
         request.body;
-      await addRowToSheet("RSVP Responses", {
+      await getStorage().addRSVP({
         guestName,
         tableNumber,
         attending,
@@ -23,7 +23,7 @@ export default async function (request: VercelRequest, response: VercelResponse)
     }
   } else if (request.method === "GET") {
     try {
-      const rsvps = await getRowsFromSheet("RSVP Responses");
+      const rsvps = await getStorage().getRSVPs();
       response.status(200).json(rsvps);
     } catch (error: any) {
       console.error("Error fetching RSVPs:", error);
