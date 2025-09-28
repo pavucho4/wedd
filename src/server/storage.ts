@@ -1,4 +1,4 @@
-import { get, put } from '@vercel/blob';
+import { list, put } from '@vercel/blob';
 
 export interface Guest {
   id: string;
@@ -66,9 +66,12 @@ class BlobStorage implements StorageAdapter {
 
   private async readJSON<T>(key: string, fallback: T): Promise<T> {
     try {
-      const res = await get(key);
-      if (!res?.blob) return fallback;
-      const text = await res.blob.text();
+      const listing = await list();
+      const item = listing.blobs.find(b => b.pathname === key);
+      if (!item?.url) return fallback;
+      const resp = await fetch(item.url);
+      if (!resp.ok) return fallback;
+      const text = await resp.text();
       return JSON.parse(text) as T;
     } catch {
       return fallback;
@@ -76,7 +79,7 @@ class BlobStorage implements StorageAdapter {
   }
 
   private async writeJSON<T>(key: string, data: T): Promise<void> {
-    await put(key, JSON.stringify(data), { contentType: 'application/json', access: 'private' });
+    await put(key, JSON.stringify(data), { contentType: 'application/json', access: 'public' });
   }
 
   async getGuests(): Promise<Guest[]> {
