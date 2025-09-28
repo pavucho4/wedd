@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Users, Check, X, Download, Plus, RefreshCw, Trash2, Sync } from 'lucide-react';
+import { Users, Check, X, Download, Plus, RefreshCw, Trash2, RotateCcw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -334,7 +334,7 @@ export function WeddingAdmin() {
               Обновить
             </Button>
             <Button variant="outline" onClick={handleSync} disabled={loading} className="flex items-center gap-2">
-              <Sync className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+              <RotateCcw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
               Синхронизировать
             </Button>
           </div>
