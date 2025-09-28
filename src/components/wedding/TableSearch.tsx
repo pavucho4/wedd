@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { Search, Users, MapPin } from 'lucide-react';
+import { Search, Users, MapPin, Phone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { getGuests } from '@/services/guestService';
+import { getSavedRSVPs } from '@/services/rsvpService';
 import { useToast } from '@/hooks/use-toast';
 
 interface Guest {
@@ -14,9 +15,26 @@ interface Guest {
   timestamp?: string;
 }
 
+interface RSVPData {
+  guestName: string;
+  tableNumber: string;
+  attending: boolean;
+  timestamp: string;
+  userAgent: string;
+  url: string;
+}
+
+interface SearchResult {
+  name: string;
+  tableNumber: string;
+  attending?: boolean;
+  timestamp?: string;
+  source: 'guest' | 'rsvp';
+}
+
 export function TableSearch() {
   const [searchQuery, setSearchQuery] = useState('');
-  const [searchResult, setSearchResult] = useState<Guest | null>(null);
+  const [searchResult, setSearchResult] = useState<SearchResult | null>(null);
   const [isSearching, setIsSearching] = useState(false);
   const { toast } = useToast();
 
@@ -32,10 +50,15 @@ export function TableSearch() {
 
     setIsSearching(true);
     try {
-      const guests = await getGuests();
       const query = searchQuery.toLowerCase().trim();
       
-      // Ищем гостя по имени (частичное совпадение)
+      // Загружаем данные из обеих таблиц
+      const [guests, rsvps] = await Promise.all([
+        getGuests(),
+        getSavedRSVPs()
+      ]);
+
+      // Ищем среди гостей
       const foundGuest = guests.find(guest =>
         guest.names.some(name => 
           name.toLowerCase().includes(query) || 
@@ -43,11 +66,32 @@ export function TableSearch() {
         )
       );
 
-      if (foundGuest) {
-        setSearchResult(foundGuest);
+      // Ищем среди RSVP ответов
+      const foundRSVP = rsvps.find(rsvp =>
+        rsvp.guestName.toLowerCase().includes(query) ||
+        query.includes(rsvp.guestName.toLowerCase())
+      );
+
+      // Приоритет RSVP ответам (если есть и гость, и RSVP)
+      const result = foundRSVP ? {
+        name: foundRSVP.guestName,
+        tableNumber: foundRSVP.tableNumber,
+        attending: foundRSVP.attending,
+        timestamp: foundRSVP.timestamp,
+        source: 'rsvp' as const
+      } : foundGuest ? {
+        name: foundGuest.names.join(', '),
+        tableNumber: foundGuest.tableNumber,
+        attending: foundGuest.attending,
+        timestamp: foundGuest.timestamp,
+        source: 'guest' as const
+      } : null;
+
+      if (result) {
+        setSearchResult(result);
         toast({
           title: "Гость найден!",
-          description: `Найден ${foundGuest.names.join(', ')}`
+          description: `Найден ${result.name}`
         });
       } else {
         setSearchResult(null);
@@ -155,37 +199,35 @@ export function TableSearch() {
                     Добро пожаловать!
                   </h3>
                   
-                  <div className="space-y-4">
-                    <div>
-                      <p className="text-lg text-muted-foreground mb-2">Ваше имя:</p>
-                      <p className="text-2xl font-medium text-foreground">
-                        {searchResult.names.join(', ')}
-                      </p>
-                    </div>
-                    
-                    <div className="bg-accent/50 rounded-lg p-6">
-                      <div className="flex items-center justify-center mb-2">
-                        <MapPin className="w-6 h-6 text-primary mr-2" />
-                        <p className="text-sm text-muted-foreground font-light">Ваш столик</p>
+                    <div className="space-y-4">
+                      <div>
+                        <p className="text-lg text-muted-foreground mb-2">Ваше имя:</p>
+                        <p className="text-2xl font-medium text-foreground">
+                          {searchResult.name}
+                        </p>
                       </div>
-                      <p className="text-4xl font-serif text-primary">
-                        №{searchResult.tableNumber}
-                      </p>
-                    </div>
+                      
+                      <div className="bg-accent/50 rounded-lg p-6">
+                        <div className="flex items-center justify-center mb-2">
+                          <MapPin className="w-6 h-6 text-primary mr-2" />
+                          <p className="text-sm text-muted-foreground font-light">Ваш столик</p>
+                        </div>
+                        <p className="text-4xl font-serif text-primary font-bold">
+                          №{searchResult.tableNumber}
+                        </p>
+                      </div>
 
-                    {searchResult.attending !== undefined && (
                       <div className="mt-4">
-                        <p className="text-sm text-muted-foreground mb-1">Статус:</p>
+                        <p className="text-sm text-muted-foreground mb-1">Источник:</p>
                         <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
-                          searchResult.attending 
-                            ? 'bg-green-100 text-green-800' 
-                            : 'bg-red-100 text-red-800'
+                          searchResult.source === 'rsvp' 
+                            ? 'bg-blue-100 text-blue-800' 
+                            : 'bg-gray-100 text-gray-800'
                         }`}>
-                          {searchResult.attending ? 'Придет' : 'Не придет'}
+                          {searchResult.source === 'rsvp' ? 'RSVP ответ' : 'Список гостей'}
                         </span>
                       </div>
-                    )}
-                  </div>
+                    </div>
                 </div>
               </CardContent>
             </Card>
@@ -196,8 +238,28 @@ export function TableSearch() {
       {/* Footer */}
       <footer className="py-12 px-6 bg-muted/30">
         <div className="max-w-4xl mx-auto text-center">
-          <p className="text-muted-foreground font-light">
-            Не можете найти свой столик? Обратитесь к организаторам
+          <div className="mb-6">
+            <p className="text-muted-foreground font-light mb-4">
+              Не можете найти свой столик? Обратитесь к организаторам
+            </p>
+            <div className="card-elegant rounded-xl p-6 max-w-sm mx-auto">
+              <p className="text-sm text-muted-foreground font-light mb-3">
+                Контакты организаторов:
+              </p>
+              <div className="space-y-2">
+                <div className="flex items-center justify-center gap-2">
+                  <Phone className="w-4 h-4 text-primary" />
+                  <span className="text-primary font-medium">+7 (928) 361-72-17</span>
+                </div>
+                <div className="flex items-center justify-center gap-2">
+                  <Phone className="w-4 h-4 text-primary" />
+                  <span className="text-primary font-medium">+7 (999) 379-29-17</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <p className="text-xs text-muted-foreground font-light">
+            15 ноября 2025 • Ставрополь
           </p>
         </div>
       </footer>
