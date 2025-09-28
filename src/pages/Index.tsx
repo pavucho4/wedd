@@ -1,4 +1,5 @@
 import { WeddingHero } from '@/components/wedding/WeddingHero';
+import { WeddingStory } from '@/components/wedding/WeddingStory';
 import { WeddingTimeline } from '@/components/wedding/WeddingTimeline';
 import { WeddingDressCode } from '@/components/wedding/WeddingDressCode';
 import { WeddingLocations } from '@/components/wedding/WeddingLocations';
@@ -18,6 +19,7 @@ const Index = () => {
   return (
     <main className="min-h-screen bg-background overflow-x-hidden">
       <WeddingHero guestName={name} gender={gender} />
+      <WeddingStory />
       <WeddingTimeline showRegistration={showRegistration} />
       <WeddingDressCode />
       <WeddingLocations showRegistration={showRegistration} />

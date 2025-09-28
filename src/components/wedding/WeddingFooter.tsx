@@ -1,8 +1,34 @@
 import { Heart, Instagram, Phone } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
 
 export function WeddingFooter() {
+  const [isVisible, setIsVisible] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+        }
+      },
+      { threshold: 0.3 }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <footer className="py-16 px-6 bg-gradient-to-t from-secondary/30 to-background">
+    <footer 
+      ref={sectionRef}
+      className={`py-16 px-6 bg-gradient-to-t from-secondary/30 to-background transition-all duration-1000 ease-out ${
+        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
+      }`}
+    >
       <div className="max-w-4xl mx-auto text-center">
         <div className="staggered-fade mb-8">
           <div className="flex items-center justify-center gap-4 mb-6">

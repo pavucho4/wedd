@@ -1,4 +1,5 @@
 import { MapPin, Navigation, Clock } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
 
 interface LocationCardProps {
   title: string;
@@ -63,8 +64,33 @@ interface WeddingLocationsProps {
 }
 
 export function WeddingLocations({ showRegistration = true }: WeddingLocationsProps) {
+  const [isVisible, setIsVisible] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+        }
+      },
+      { threshold: 0.3 }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <section className="py-20 px-6 bg-gradient-to-b from-background to-muted/20">
+    <section 
+      ref={sectionRef}
+      className={`py-20 px-6 bg-gradient-to-b from-background to-muted/20 transition-all duration-1000 ease-out ${
+        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
+      }`}
+    >
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-serif text-primary mb-6 staggered-fade">

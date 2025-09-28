@@ -1,4 +1,26 @@
+import { useState, useEffect, useRef } from 'react';
+
 export function WeddingDressCode() {
+  const [isVisible, setIsVisible] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+        }
+      },
+      { threshold: 0.3 }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
   const femaleColors = [
     { name: 'Шоколад', color: 'hsl(25, 30%, 35%)' },
     { name: 'Мокко', color: 'hsl(30, 25%, 45%)' },
@@ -16,7 +38,12 @@ export function WeddingDressCode() {
   ];
 
   return (
-    <section className="py-20 px-6 bg-gradient-to-b from-secondary/20 to-background">
+    <section 
+      ref={sectionRef}
+      className={`py-20 px-6 bg-gradient-to-b from-secondary/20 to-background transition-all duration-1000 ease-out ${
+        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
+      }`}
+    >
       <div className="max-w-4xl mx-auto">
         <div className="staggered-fade text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-serif text-primary mb-4">

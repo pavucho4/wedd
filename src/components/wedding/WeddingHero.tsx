@@ -29,13 +29,6 @@ export function WeddingHero({ guestName, gender }: WeddingHeroProps) {
       </div>
       
       <div className="relative z-10 text-center max-w-4xl mx-auto px-6">
-        {/* Guest name */}
-        <div className="staggered-fade mb-8">
-          <p className="text-lg md:text-xl text-muted-foreground font-light tracking-wide">
-            {getGreeting()} {guestName}
-          </p>
-        </div>
-
         {/* Couple names */}
         <div className="staggered-fade mb-8">
           <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif font-light text-primary mb-4">
@@ -51,43 +44,24 @@ export function WeddingHero({ guestName, gender }: WeddingHeroProps) {
           </h1>
         </div>
 
-        {/* Love story moments */}
-        <div className="staggered-fade mb-16">
-          <div className="max-w-2xl mx-auto">
-            <div className="grid md:grid-cols-2 gap-8">
-              <div className="card-elegant rounded-xl p-6 text-center">
-                <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-gradient-to-br from-primary/20 to-accent/30 flex items-center justify-center">
-                  <Heart className="w-6 h-6 text-primary" />
-                </div>
-                <h3 className="font-serif text-lg text-primary mb-2">Наша история началась</h3>
-                <p className="text-sm text-muted-foreground font-light mb-1">Мы влюбились друг в друга с первого взгляда</p>
-                <p className="text-primary font-medium">18 июля 2021</p>
-              </div>
-              <div className="card-elegant rounded-xl p-6 text-center">
-                <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-gradient-to-br from-accent/20 to-primary/30 flex items-center justify-center">
-                  <Heart className="w-6 h-6 text-primary" />
-                </div>
-                <h3 className="font-serif text-lg text-primary mb-2">Предложение</h3>
-                <p className="text-sm text-muted-foreground font-light mb-1">Решили пожениться</p>
-                <p className="text-primary font-medium">8 июля 2025</p>
-              </div>
-            </div>
-          </div>
+        {/* Guest name */}
+        <div className="staggered-fade mb-8">
+          <p className="text-lg md:text-xl text-muted-foreground font-light tracking-wide">
+            {getGreeting()} {guestName}
+          </p>
         </div>
 
         {/* Wedding date */}
-        <div className="staggered-fade">
-          <div className="card-elegant rounded-2xl p-8 md:p-12 max-w-md mx-auto">
-            <p className="text-sm md:text-base text-muted-foreground font-light mb-2">
-              Приглашаем вас на нашу свадьбу
-            </p>
-            <h2 className="text-3xl md:text-4xl font-serif text-primary mb-2">
-              15 ноября 2025
-            </h2>
-            <p className="text-muted-foreground font-light">
-              Ставрополь
-            </p>
-          </div>
+        <div className="staggered-fade mb-16">
+          <p className="text-sm md:text-base text-muted-foreground font-light mb-4">
+            Приглашаем вас на нашу свадьбу
+          </p>
+          <h2 className="text-6xl md:text-8xl lg:text-9xl font-serif text-primary mb-4">
+            15 ноября 2025
+          </h2>
+          <p className="text-lg text-muted-foreground font-light">
+            Ставрополь
+          </p>
         </div>
       </div>
     </section>
