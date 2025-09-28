@@ -90,7 +90,7 @@ export function WeddingStory() {
                 : 'opacity-0 translate-y-12'
             }`}
           >
-            <div className={`flex flex-col ${block.imagePosition === 'right' ? 'md:flex-row' : 'md:flex-row-reverse'} items-center gap-8 md:gap-16`}>
+            <div className={`flex flex-col ${block.imagePosition === 'right' ? 'md:flex-row' : 'md:flex-row-reverse'} items-center gap-8 md:gap-16 min-h-[300px] md:min-h-[400px]`}>
               {/* Text content */}
               <div 
                 ref={(el) => (elementRefs.current[`text-${block.id}`] = el)}
@@ -110,23 +110,22 @@ export function WeddingStory() {
               <div 
                 ref={(el) => (elementRefs.current[`image-${block.id}`] = el)}
                 data-element-id={`image-${block.id}`}
-                className={`flex-1 max-w-md transition-all duration-1000 ease-out delay-400 ${
+                className={`flex-1 max-w-lg transition-all duration-1000 ease-out delay-400 ${
                   visibleElements[`image-${block.id}`] 
                     ? 'opacity-100 translate-x-0' 
                     : 'opacity-0 translate-x-8'
                 }`}
               >
-                <div className="relative overflow-hidden rounded-2xl shadow-lg">
+                <div className="relative rounded-2xl shadow-lg story-image-container p-2 md:p-4">
                   <img
                     src={block.image}
                     alt={`История ${index + 1}`}
-                    className="w-full h-64 md:h-80 object-cover transition-transform duration-500 hover:scale-105"
+                    className="story-image w-full h-auto max-h-80 md:max-h-96 object-contain transition-transform duration-500 hover:scale-105 rounded-xl"
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
                       target.src = '/placeholder.svg';
                     }}
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
                 </div>
               </div>
             </div>
