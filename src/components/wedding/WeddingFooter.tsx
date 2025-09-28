@@ -1,4 +1,4 @@
-import { Heart, Instagram, Phone } from 'lucide-react';
+import { Heart, Instagram } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 
 export function WeddingFooter() {
@@ -56,23 +56,6 @@ export function WeddingFooter() {
           </p>
         </div>
 
-        <div className="staggered-fade mb-8">
-          <div className="card-elegant rounded-xl p-6 max-w-sm mx-auto">
-            <p className="text-sm text-muted-foreground font-light mb-2">
-              По всем вопросам обращайтесь:
-            </p>
-            <div className="space-y-2">
-              <div className="flex items-center justify-center gap-2">
-                <Phone className="w-4 h-4 text-primary" />
-                <span className="text-primary font-medium">+7 (928) 361-72-17</span>
-              </div>
-              <div className="flex items-center justify-center gap-2">
-                <Phone className="w-4 h-4 text-primary" />
-                <span className="text-primary font-medium">+7 (999) 379-29-17</span>
-              </div>
-            </div>
-          </div>
-        </div>
 
         <div className="staggered-fade">
           <p className="text-xs text-muted-foreground font-light">
