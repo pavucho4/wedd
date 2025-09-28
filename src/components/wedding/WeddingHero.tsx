@@ -31,7 +31,7 @@ export function WeddingHero({ guestName, gender }: WeddingHeroProps) {
       <div className="relative z-10 text-center max-w-4xl mx-auto px-6">
         {/* Couple names */}
         <div className="staggered-fade mb-8">
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif font-light text-primary mb-4">
+          <h1 className="text-6xl md:text-8xl lg:text-9xl font-serif font-light text-primary mb-4">
             Даниил
           </h1>
             <div className="flex items-center justify-center gap-8 my-8">
@@ -39,7 +39,7 @@ export function WeddingHero({ guestName, gender }: WeddingHeroProps) {
               <span className="text-4xl md:text-5xl font-serif text-primary font-medium">&</span>
               <div className="h-px w-20 bg-gradient-to-l from-transparent to-primary/60" />
             </div>
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif font-light text-primary">
+          <h1 className="text-6xl md:text-8xl lg:text-9xl font-serif font-light text-primary">
             Алина
           </h1>
         </div>

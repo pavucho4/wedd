@@ -84,7 +84,7 @@ export function WeddingStory() {
           <div
             key={block.id}
             ref={(el) => (blockRefs.current[index] = el)}
-            className={`mb-16 md:mb-24 transition-all duration-1000 ease-out ${
+            className={`mb-16 md:mb-24 transition-all duration-700 ease-out ${
               visibleBlocks[index] 
                 ? 'opacity-100 translate-y-0' 
                 : 'opacity-0 translate-y-12'
@@ -95,13 +95,13 @@ export function WeddingStory() {
               <div 
                 ref={(el) => (elementRefs.current[`text-${block.id}`] = el)}
                 data-element-id={`text-${block.id}`}
-                className={`flex-1 text-center md:text-left transition-all duration-1000 ease-out delay-200 ${
+                className={`flex-1 text-center md:text-left transition-all duration-700 ease-out delay-100 px-4 md:px-0 ${
                   visibleElements[`text-${block.id}`] 
                     ? 'opacity-100 translate-x-0' 
                     : 'opacity-0 translate-x-8'
                 }`}
               >
-                <p className="text-lg md:text-xl text-muted-foreground font-light leading-relaxed">
+                <p className="story-text text-xl md:text-2xl">
                   {block.text}
                 </p>
               </div>
@@ -110,13 +110,13 @@ export function WeddingStory() {
               <div 
                 ref={(el) => (elementRefs.current[`image-${block.id}`] = el)}
                 data-element-id={`image-${block.id}`}
-                className={`flex-1 max-w-lg transition-all duration-1000 ease-out delay-400 ${
+                className={`flex-1 max-w-lg transition-all duration-700 ease-out delay-200 ${
                   visibleElements[`image-${block.id}`] 
                     ? 'opacity-100 translate-x-0' 
                     : 'opacity-0 translate-x-8'
                 }`}
               >
-                <div className="relative rounded-2xl shadow-lg story-image-container p-2 md:p-4">
+                <div className="story-image-container">
                   <img
                     src={block.image}
                     alt={`История ${index + 1}`}

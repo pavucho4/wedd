@@ -270,9 +270,24 @@ All colors MUST be HSL.
 .story-image-container {
   background: transparent;
   backdrop-filter: none;
+  box-shadow: none;
+  border: none;
 }
 
 .story-image {
   background: transparent;
   mix-blend-mode: normal;
+}
+
+/* Beautiful story text styling */
+.story-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 300;
+  letter-spacing: 0.02em;
+  line-height: 1.7;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  color: hsl(var(--muted-foreground));
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
