@@ -6,13 +6,23 @@ export function WeddingFooter() {
   const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
+    // Проверяем, является ли устройство мобильным или слабым
+    const isMobile = window.innerWidth < 768;
+    const isLowEnd = navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 2;
+    
+    // На мобильных и слабых устройствах отключаем анимации
+    if (isMobile || isLowEnd) {
+      setIsVisible(true);
+      return;
+    }
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
           setIsVisible(true);
         }
       },
-      { threshold: 0.3 }
+      { threshold: 0.1 }
     );
 
     if (sectionRef.current) {
@@ -25,7 +35,7 @@ export function WeddingFooter() {
   return (
     <footer 
       ref={sectionRef}
-      className={`py-16 px-6 bg-gradient-to-t from-secondary/30 to-background transition-all duration-700 ease-out ${
+      className={`py-16 px-6 bg-gradient-to-t from-secondary/30 to-background transition-all duration-350 ease-out ${
         isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
       }`}
     >

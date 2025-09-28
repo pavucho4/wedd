@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Search, Users, MapPin, Phone } from 'lucide-react';
+import { Search, Users, MapPin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
@@ -224,34 +224,6 @@ export function TableSearch() {
         </section>
       )}
 
-      {/* Footer */}
-      <footer className="py-12 px-6 bg-muted/30">
-        <div className="max-w-4xl mx-auto text-center">
-          <div className="mb-6">
-            <p className="text-muted-foreground font-light mb-4">
-              Не можете найти свой столик? Обратитесь к организаторам
-            </p>
-            <div className="card-elegant rounded-xl p-6 max-w-sm mx-auto">
-              <p className="text-sm text-muted-foreground font-light mb-3">
-                Контакты организаторов:
-              </p>
-              <div className="space-y-2">
-                <div className="flex items-center justify-center gap-2">
-                  <Phone className="w-4 h-4 text-primary" />
-                  <span className="text-primary font-medium">+7 (928) 361-72-17</span>
-                </div>
-                <div className="flex items-center justify-center gap-2">
-                  <Phone className="w-4 h-4 text-primary" />
-                  <span className="text-primary font-medium">+7 (999) 379-29-17</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <p className="text-xs text-muted-foreground font-light">
-            15 ноября 2025 • Ставрополь
-          </p>
-        </div>
-      </footer>
     </main>
   );
 }

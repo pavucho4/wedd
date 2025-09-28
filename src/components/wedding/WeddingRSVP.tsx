@@ -19,13 +19,28 @@ export function WeddingRSVP({ guestName, tableNumber }: WeddingRSVPProps) {
   const { toast } = useToast();
 
   useEffect(() => {
+    // Проверяем, является ли устройство мобильным или слабым
+    const isMobile = window.innerWidth < 768;
+    const isLowEnd = navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 2;
+    
+    // На мобильных и слабых устройствах отключаем анимации
+    if (isMobile || isLowEnd) {
+      setIsVisible(true);
+      setVisibleElements({
+        'title': true,
+        'subtitle': true,
+        'card': true
+      });
+      return;
+    }
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
           setIsVisible(true);
         }
       },
-      { threshold: 0.3 }
+      { threshold: 0.1 }
     );
 
     const elementObserver = new IntersectionObserver(
@@ -42,7 +57,7 @@ export function WeddingRSVP({ guestName, tableNumber }: WeddingRSVPProps) {
           }
         });
       },
-      { threshold: 0.2 }
+      { threshold: 0.1 }
     );
 
     if (sectionRef.current) {
@@ -123,7 +138,7 @@ export function WeddingRSVP({ guestName, tableNumber }: WeddingRSVPProps) {
   return (
     <section 
       ref={sectionRef}
-      className={`py-20 px-6 bg-gradient-to-b from-muted/20 to-background transition-all duration-700 ease-out ${
+      className={`py-20 px-6 bg-gradient-to-b from-muted/20 to-background transition-all duration-350 ease-out ${
         isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
       }`}
     >
@@ -132,7 +147,7 @@ export function WeddingRSVP({ guestName, tableNumber }: WeddingRSVPProps) {
           <h2 
             ref={(el) => (elementRefs.current['title'] = el)}
             data-element-id="title"
-            className={`text-6xl md:text-8xl lg:text-9xl font-serif text-primary mb-6 transition-all duration-700 ease-out ${
+            className={`text-6xl md:text-8xl lg:text-9xl font-serif text-primary mb-6 transition-all duration-350 ease-out ${
               visibleElements['title'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
             }`}
           >
@@ -141,7 +156,7 @@ export function WeddingRSVP({ guestName, tableNumber }: WeddingRSVPProps) {
           <p 
             ref={(el) => (elementRefs.current['subtitle'] = el)}
             data-element-id="subtitle"
-            className={`text-lg md:text-xl text-muted-foreground font-light transition-all duration-700 ease-out delay-100 ${
+            className={`text-lg md:text-xl text-muted-foreground font-light transition-all duration-350 ease-out delay-100 ${
               visibleElements['subtitle'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
             }`}
           >
@@ -152,7 +167,7 @@ export function WeddingRSVP({ guestName, tableNumber }: WeddingRSVPProps) {
         <div 
           ref={(el) => (elementRefs.current['card'] = el)}
           data-element-id="card"
-          className={`card-elegant rounded-2xl p-8 md:p-12 transition-all duration-700 ease-out delay-200 ${
+          className={`card-elegant rounded-2xl p-8 md:p-12 transition-all duration-350 ease-out delay-200 ${
             visibleElements['card'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
           }`}
         >

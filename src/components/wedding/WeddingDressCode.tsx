@@ -6,14 +6,41 @@ export function WeddingDressCode() {
   const sectionRef = useRef<HTMLElement>(null);
   const colorRefs = useRef<(HTMLDivElement | null)[]>([]);
 
+  const femaleColors = [
+    { name: 'Шоколад', color: 'hsl(25, 30%, 35%)' },
+    { name: 'Мокко', color: 'hsl(30, 25%, 45%)' },
+    { name: 'Бежевый', color: 'hsl(35, 35%, 65%)' },
+    { name: 'Кремовый', color: 'hsl(40, 40%, 80%)' },
+    { name: 'Пудра', color: 'hsl(20, 20%, 85%)' },
+    { name: 'Шампань', color: 'hsl(50, 40%, 92%)' }
+  ];
+
+  const maleColors = [
+    { name: 'Черный', color: 'hsl(0, 0%, 10%)' },
+    { name: 'Темно-серый', color: 'hsl(0, 0%, 30%)' },
+    { name: 'Светло-серый', color: 'hsl(0, 0%, 65%)' },
+    { name: 'Бежевый', color: 'hsl(35, 35%, 65%)' }
+  ];
+
   useEffect(() => {
+    // Проверяем, является ли устройство мобильным или слабым
+    const isMobile = window.innerWidth < 768;
+    const isLowEnd = navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 2;
+    
+    // На мобильных и слабых устройствах отключаем анимации
+    if (isMobile || isLowEnd) {
+      setIsVisible(true);
+      setVisibleColors(new Array(femaleColors.length + maleColors.length).fill(true));
+      return;
+    }
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
           setIsVisible(true);
         }
       },
-      { threshold: 0.3 }
+      { threshold: 0.1 }
     );
 
     const colorObserver = new IntersectionObserver(
@@ -31,7 +58,7 @@ export function WeddingDressCode() {
           }
         });
       },
-      { threshold: 0.2 }
+      { threshold: 0.1 }
     );
 
     if (sectionRef.current) {
@@ -48,26 +75,10 @@ export function WeddingDressCode() {
     };
   }, []);
 
-  const femaleColors = [
-    { name: 'Шоколад', color: 'hsl(25, 30%, 35%)' },
-    { name: 'Мокко', color: 'hsl(30, 25%, 45%)' },
-    { name: 'Бежевый', color: 'hsl(35, 35%, 65%)' },
-    { name: 'Кремовый', color: 'hsl(40, 40%, 80%)' },
-    { name: 'Пудра', color: 'hsl(20, 20%, 85%)' },
-    { name: 'Шампань', color: 'hsl(50, 40%, 92%)' }
-  ];
-
-  const maleColors = [
-    { name: 'Черный', color: 'hsl(0, 0%, 10%)' },
-    { name: 'Темно-серый', color: 'hsl(0, 0%, 30%)' },
-    { name: 'Светло-серый', color: 'hsl(0, 0%, 65%)' },
-    { name: 'Бежевый', color: 'hsl(35, 35%, 65%)' }
-  ];
-
   return (
     <section 
       ref={sectionRef}
-      className={`py-20 px-6 bg-gradient-to-b from-secondary/20 to-background transition-all duration-700 ease-out ${
+      className={`py-20 px-6 bg-gradient-to-b from-secondary/20 to-background transition-all duration-350 ease-out ${
         isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
       }`}
     >
@@ -90,12 +101,12 @@ export function WeddingDressCode() {
                 <div
                   key={index}
                   ref={(el) => (colorRefs.current[index] = el)}
-                  className={`relative group cursor-pointer transition-all duration-700 ease-out ${
+                  className={`relative group cursor-pointer transition-all duration-350 ease-out ${
                     visibleColors[index] 
                       ? 'opacity-100 translate-y-0 scale-100' 
                       : 'opacity-0 translate-y-8 scale-95'
                   }`}
-                  style={{ transitionDelay: `${index * 80}ms` }}
+                  style={{ transitionDelay: `${index * 40}ms` }}
                 >
                   <div className="brush-stroke relative overflow-hidden rounded-xl aspect-square">
                     <div
@@ -122,12 +133,12 @@ export function WeddingDressCode() {
                 <div
                   key={index}
                   ref={(el) => (colorRefs.current[femaleColors.length + index] = el)}
-                  className={`relative group cursor-pointer transition-all duration-700 ease-out ${
+                  className={`relative group cursor-pointer transition-all duration-350 ease-out ${
                     visibleColors[femaleColors.length + index] 
                       ? 'opacity-100 translate-y-0 scale-100' 
                       : 'opacity-0 translate-y-8 scale-95'
                   }`}
-                  style={{ transitionDelay: `${(femaleColors.length + index) * 80}ms` }}
+                  style={{ transitionDelay: `${(femaleColors.length + index) * 40}ms` }}
                 >
                   <div className="brush-stroke relative overflow-hidden rounded-xl aspect-square">
                     <div

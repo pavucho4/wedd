@@ -7,6 +7,24 @@ export function WeddingStory() {
   const elementRefs = useRef<{[key: string]: HTMLDivElement | null}>({});
 
   useEffect(() => {
+    // Проверяем, является ли устройство мобильным или слабым
+    const isMobile = window.innerWidth < 768;
+    const isLowEnd = navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 2;
+    
+    // На мобильных и слабых устройствах отключаем анимации
+    if (isMobile || isLowEnd) {
+      setVisibleBlocks([true, true, true]);
+      setVisibleElements({
+        'text-0': true,
+        'image-0': true,
+        'text-1': true,
+        'image-1': true,
+        'text-2': true,
+        'image-2': true
+      });
+      return;
+    }
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -22,7 +40,7 @@ export function WeddingStory() {
           }
         });
       },
-      { threshold: 0.3 }
+      { threshold: 0.1 }
     );
 
     const elementObserver = new IntersectionObserver(
@@ -39,7 +57,7 @@ export function WeddingStory() {
           }
         });
       },
-      { threshold: 0.2 }
+      { threshold: 0.1 }
     );
 
     blockRefs.current.forEach((ref) => {
@@ -84,7 +102,7 @@ export function WeddingStory() {
           <div
             key={block.id}
             ref={(el) => (blockRefs.current[index] = el)}
-            className={`mb-8 md:mb-16 lg:mb-24 transition-all duration-700 ease-out ${
+            className={`mb-8 md:mb-16 lg:mb-24 transition-all duration-350 ease-out ${
               visibleBlocks[index] 
                 ? 'opacity-100 translate-y-0' 
                 : 'opacity-0 translate-y-12'
@@ -95,7 +113,7 @@ export function WeddingStory() {
               <div 
                 ref={(el) => (elementRefs.current[`text-${block.id}`] = el)}
                 data-element-id={`text-${block.id}`}
-                className={`flex-1 text-center transition-all duration-700 ease-out delay-100 px-4 md:px-0 ${
+                className={`flex-1 text-center transition-all duration-350 ease-out delay-50 px-4 md:px-0 ${
                   visibleElements[`text-${block.id}`] 
                     ? 'opacity-100 translate-x-0' 
                     : 'opacity-0 translate-x-8'
@@ -110,7 +128,7 @@ export function WeddingStory() {
               <div 
                 ref={(el) => (elementRefs.current[`image-${block.id}`] = el)}
                 data-element-id={`image-${block.id}`}
-                className={`flex-1 max-w-lg transition-all duration-700 ease-out delay-200 ${
+                className={`flex-1 max-w-lg transition-all duration-350 ease-out delay-100 ${
                   index === 2 ? 'hidden md:block' : 'block'
                 } ${
                   visibleElements[`image-${block.id}`] 

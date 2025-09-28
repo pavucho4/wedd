@@ -12,13 +12,24 @@ export function WeddingTimeline({ showRegistration = true }: WeddingTimelineProp
   const eventRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
+    // Проверяем, является ли устройство мобильным или слабым
+    const isMobile = window.innerWidth < 768;
+    const isLowEnd = navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 2;
+    
+    // На мобильных и слабых устройствах отключаем анимации
+    if (isMobile || isLowEnd) {
+      setIsVisible(true);
+      setVisibleEvents(new Array(allEvents.length).fill(true));
+      return;
+    }
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
           setIsVisible(true);
         }
       },
-      { threshold: 0.3 }
+      { threshold: 0.1 }
     );
 
     const eventObserver = new IntersectionObserver(
@@ -36,7 +47,7 @@ export function WeddingTimeline({ showRegistration = true }: WeddingTimelineProp
           }
         });
       },
-      { threshold: 0.2 }
+      { threshold: 0.1 }
     );
 
     if (sectionRef.current) {
@@ -92,7 +103,7 @@ export function WeddingTimeline({ showRegistration = true }: WeddingTimelineProp
   return (
     <section 
       ref={sectionRef}
-      className={`py-20 px-6 bg-gradient-to-b from-background to-secondary/20 transition-all duration-700 ease-out ${
+      className={`py-20 px-6 bg-gradient-to-b from-background to-secondary/20 transition-all duration-350 ease-out ${
         isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
       }`}
     >
@@ -121,12 +132,12 @@ export function WeddingTimeline({ showRegistration = true }: WeddingTimelineProp
                   ref={(el) => (eventRefs.current[index] = el)}
                   className={`relative flex items-center ${
                     isEven ? 'md:flex-row' : 'md:flex-row-reverse'
-                  } flex-col gap-8 transition-all duration-700 ease-out ${
+                  } flex-col gap-8 transition-all duration-350 ease-out ${
                     visibleEvents[index] 
                       ? 'opacity-100 translate-y-0' 
                       : 'opacity-0 translate-y-8'
                   }`}
-                  style={{ transitionDelay: `${index * 150}ms` }}
+                  style={{ transitionDelay: `${index * 75}ms` }}
                 >
                   {/* Timeline dot */}
                   <div className="absolute left-1/2 transform -translate-x-1/2 w-4 h-4 bg-primary rounded-full border-4 border-background shadow-lg hidden md:block z-10" />
