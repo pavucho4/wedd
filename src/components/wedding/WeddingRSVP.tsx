@@ -7,9 +7,32 @@ import { sendRSVPData } from '@/services/rsvpService';
 interface WeddingRSVPProps {
   guestName: string;
   tableNumber: string;
+  gender: 'male' | 'female' | 'plural';
 }
 
-export function WeddingRSVP({ guestName, tableNumber }: WeddingRSVPProps) {
+export function WeddingRSVP({ guestName, tableNumber, gender }: WeddingRSVPProps) {
+  const getGreeting = () => {
+    switch (gender) {
+      case 'female': return 'Уважаемая';
+      case 'plural': return 'Уважаемые';
+      default: return 'Уважаемый';
+    }
+  };
+
+  const getYesButtonText = () => {
+    switch (gender) {
+      case 'plural': return 'Будем присутствовать';
+      default: return 'Буду присутствовать';
+    }
+  };
+
+  const getNoButtonText = () => {
+    switch (gender) {
+      case 'plural': return 'Не сможем прийти';
+      default: return 'Не смогу прийти';
+    }
+  };
+
   const [response, setResponse] = useState<'yes' | 'no' | null>(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
@@ -173,7 +196,7 @@ export function WeddingRSVP({ guestName, tableNumber }: WeddingRSVPProps) {
         >
           <div className="text-center mb-8">
             <p className="text-lg md:text-xl text-muted-foreground font-light mb-2">
-              Уважаемый {guestName}
+              {getGreeting()} {guestName}
             </p>
             <div className="bg-accent/50 rounded-lg p-6 inline-block">
               <p className="text-lg md:text-xl text-muted-foreground font-light mb-2">Ваш столик</p>
@@ -188,7 +211,7 @@ export function WeddingRSVP({ guestName, tableNumber }: WeddingRSVPProps) {
               disabled={response !== null}
             >
               <Check className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform" />
-              Буду присутствовать
+              {getYesButtonText()}
             </Button>
             
             <Button
@@ -198,7 +221,7 @@ export function WeddingRSVP({ guestName, tableNumber }: WeddingRSVPProps) {
               disabled={response !== null}
             >
               <X className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform" />
-              Не смогу прийти
+              {getNoButtonText()}
             </Button>
           </div>
 

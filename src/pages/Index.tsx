@@ -23,7 +23,7 @@ const Index = () => {
       <WeddingTimeline showRegistration={showRegistration} />
       <WeddingDressCode />
       <WeddingLocations showRegistration={showRegistration} />
-      <WeddingRSVP guestName={name} tableNumber={tableNumber} />
+      <WeddingRSVP guestName={name} tableNumber={tableNumber} gender={gender} />
       <WeddingCountdown />
       <WeddingFooter />
     </main>
