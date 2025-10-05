@@ -8,15 +8,15 @@ interface WeddingRSVPProps {
   guestName: string;
   tableNumber: string;
   gender: 'male' | 'female' | 'plural';
+  salutationStyle?: 'respectful' | 'dear';
 }
 
-export function WeddingRSVP({ guestName, tableNumber, gender }: WeddingRSVPProps) {
+export function WeddingRSVP({ guestName, tableNumber, gender, salutationStyle = 'respectful' }: WeddingRSVPProps) {
   const getGreeting = () => {
-    switch (gender) {
-      case 'female': return 'Уважаемая';
-      case 'plural': return 'Уважаемые';
-      default: return 'Уважаемый';
-    }
+    const respectful = { male: 'Уважаемый', female: 'Уважаемая', plural: 'Уважаемые' } as const;
+    const dear = { male: 'Дорогой', female: 'Дорогая', plural: 'Дорогие' } as const;
+    const dict = salutationStyle === 'dear' ? dear : respectful;
+    return dict[gender];
   };
 
   const getYesButtonText = () => {

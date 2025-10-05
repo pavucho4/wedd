@@ -10,7 +10,7 @@ import { WeddingAdmin } from '@/components/wedding/WeddingAdmin';
 import { usePersonalization } from '@/hooks/usePersonalization';
 
 const Index = () => {
-  const { name, tableNumber, gender, showRegistration, isAdmin } = usePersonalization();
+  const { name, tableNumber, gender, showRegistration, isAdmin, salutationStyle } = usePersonalization();
 
   if (isAdmin) {
     return <WeddingAdmin />;
@@ -18,12 +18,12 @@ const Index = () => {
 
   return (
     <main className="min-h-screen bg-background overflow-x-hidden">
-      <WeddingHero guestName={name} gender={gender} />
+      <WeddingHero guestName={name} gender={gender} salutationStyle={salutationStyle} />
       <WeddingStory />
       <WeddingTimeline showRegistration={showRegistration} />
       <WeddingDressCode />
       <WeddingLocations showRegistration={showRegistration} />
-      <WeddingRSVP guestName={name} tableNumber={tableNumber} gender={gender} />
+      <WeddingRSVP guestName={name} tableNumber={tableNumber} gender={gender} salutationStyle={salutationStyle} />
       <WeddingCountdown />
       <WeddingFooter />
     </main>

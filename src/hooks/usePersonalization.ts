@@ -6,6 +6,7 @@ export interface PersonalizationData {
   gender: 'male' | 'female' | 'plural';
   showRegistration: boolean;
   isAdmin: boolean;
+  salutationStyle: 'respectful' | 'dear';
 }
 
 export function usePersonalization(): PersonalizationData {
@@ -14,7 +15,8 @@ export function usePersonalization(): PersonalizationData {
     tableNumber: '1',
     gender: 'male',
     showRegistration: true,
-    isAdmin: false
+    isAdmin: false,
+    salutationStyle: 'respectful'
   });
 
   useEffect(() => {
@@ -24,8 +26,10 @@ export function usePersonalization(): PersonalizationData {
     const gender = (urlParams.get('gender') as 'male' | 'female' | 'plural') || 'male';
     const showRegistration = urlParams.get('registration') !== 'false';
     const isAdmin = urlParams.get('admin') === 'true';
+    const salutationParam = urlParams.get('salutation');
+    const salutationStyle: 'respectful' | 'dear' = salutationParam === 'dear' ? 'dear' : 'respectful';
 
-    setData({ name, tableNumber, gender, showRegistration, isAdmin });
+    setData({ name, tableNumber, gender, showRegistration, isAdmin, salutationStyle });
   }, []);
 
   return data;
@@ -35,14 +39,16 @@ export function createPersonalizedUrl(
   name: string, 
   tableNumber: string, 
   gender: 'male' | 'female' | 'plural' = 'male',
-  showRegistration: boolean = true
+  showRegistration: boolean = true,
+  salutationStyle: 'respectful' | 'dear' = 'respectful'
 ): string {
   const baseUrl = window.location.origin + window.location.pathname;
   const params = new URLSearchParams({
     name,
     table: tableNumber,
     gender,
-    registration: showRegistration.toString()
+    registration: showRegistration.toString(),
+    salutation: salutationStyle
   });
   return `${baseUrl}?${params.toString()}`;
 }
